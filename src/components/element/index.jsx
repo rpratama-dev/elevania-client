@@ -1,4 +1,5 @@
 import MyInputType from './MyInputTpe';
+import MyTextEditor from './MyTextEditor';
 
 class Element {
   /**
@@ -23,6 +24,31 @@ class Element {
           name={data.name}
           value={data.value}
           handleChange={data.handleChange}
+        />
+      </div>
+    );
+  }
+
+  /**
+   *
+   * @param {{
+   *  title: string,
+   *  name: string,
+   *  value: string,
+   *  handleChange: (value: string, editor: any) => void,
+   *  index: number,
+   *  parentClassName: string,
+   * }} data
+   * @returns
+   */
+  static myTextEditor(data) {
+    return (
+      <div key={data.index} className={data.parentClassName || ''}>
+        <MyTextEditor
+          id={`content-${data.id || data.name}`}
+          title={data.title}
+          content={data.value}
+          handleEditorChange={(content) => data.handleChange(content, data.name)}
         />
       </div>
     );

@@ -27,7 +27,7 @@ import ModalFormProduct from './ModalFormProduct';
  *        image_url: string,
  *      },
  *    ],
- *  }
+ *  },
  * }} props
  * @returns
  */
@@ -99,6 +99,20 @@ export default function CardProduct(props) {
           <a href="#test" className="product_title">
             <h6>{product.name}</h6>
           </a>
+          <ul className="titlebtm">
+            {/* <li>
+              <p>
+                <a href="#">AazzTech</a>
+              </p>
+            </li> */}
+            <li className="product_cat">
+              <a href="#a">
+                <span className="lnr lnr-book" />
+                {product.sku}
+              </a>
+            </li>
+          </ul>
+
           <div
             className="text--overflow"
             dangerouslySetInnerHTML={{ __html: product.description }}
