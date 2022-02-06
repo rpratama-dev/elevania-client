@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Element from '../../components/element';
+import MyComp from '../../components/MyComp';
 import CallServer from '../../utils/CallServer';
 import errorHandler from '../../utils/errorHandler';
 import MyStorage from '../../utils/MyStorage';
@@ -21,30 +22,7 @@ function Login() {
     setPayload({ ...payload, [name]: value });
   };
 
-  const fields = [
-    {
-      comp: 'myInputType',
-      data: {
-        parentClassName: 'col-md-12',
-        title: 'Email',
-        type: 'email',
-        name: 'email',
-        value: payload.email,
-        handleChange: handleChange,
-      },
-    },
-    {
-      comp: 'myInputType',
-      data: {
-        parentClassName: 'col-md-12',
-        title: 'Password',
-        type: 'password',
-        name: 'password',
-        value: payload.password,
-        handleChange: handleChange,
-      },
-    },
-  ];
+  const fields = MyComp.login(payload, handleChange);
 
   const handleLogin = async () => {
     try {

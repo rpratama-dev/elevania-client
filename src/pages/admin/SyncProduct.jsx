@@ -1,53 +1,32 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MyCheckbox from '../../components/element/MyCheckbox';
 import { formatNumber } from '../../helper/formatNumber';
 import CallServer from '../../utils/CallServer';
+import errorHandler from '../../utils/errorHandler';
 import ServerApi from '../../utils/ServerApi';
 
 export default function SyncProduct() {
   const [finished, setFinished] = useState(false);
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const bodyTable = document.getElementById('tb-product');
-    function myFunction() {
+    bodyTable.onscroll = () => {
       if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
         setPage(page + 1);
       }
-      console.log(
-        bodyTable.offsetHeight,
-        bodyTable.scrollHeight,
-        bodyTable.clientHeight,
-        Math.ceil(bodyTable.scrollTop),
-      );
-    }
-    bodyTable.onscroll = function () {
-      myFunction();
     };
   }, [products]);
 
-  /**
-   *
-   * @param {string} value
-   * @param {string} name
-   * @param {boolean} checked
-   */
-  const handleChange = (value, _, checked) => {
-    const newIDs = [...selectedIds];
-    const index = newIDs.indexOf(value);
-    console.log(index, checked);
-    if (index > -1) newIDs.splice(index, 1);
-    if (index < 0) newIDs.push(value);
-    console.log(newIDs);
-    setSelectedIds(newIDs);
-  };
-
   useEffect(() => {
-    if (!finished) loadData();
+    if (!finished && !loading) loadData();
   }, [page]);
 
   const loadData = async () => {
@@ -72,6 +51,44 @@ export default function SyncProduct() {
     }
   };
 
+  /**
+   *
+   * @param {string} value
+   * @param {string} name
+   * @param {boolean} checked
+   */
+  const handleChange = (value, _, checked) => {
+    const newIDs = [...selectedIds];
+    const index = newIDs.indexOf(value);
+    console.log(index, checked);
+    if (index > -1) newIDs.splice(index, 1);
+    if (index < 0) newIDs.push(value);
+    console.log(newIDs);
+    setSelectedIds(newIDs);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const url = `${ServerApi.URL_PRODUCT}/sync`;
+      const data = { selectedProducts: selectedIds };
+      const { response } = await CallServer({ method: 'post', url, data });
+      const msg = response.message;
+      alert(msg);
+      navigate('/admin/product');
+    } catch (error) {
+      const msg = errorHandler(error);
+      if (typeof msg === 'string') alert(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImport = () => {
+    let isConfirm = confirm(`Impor ${selectedIds.length} product`);
+    if (isConfirm) handleSubmit();
+  };
+
   return (
     <section className="section--padding2 bgcolor">
       <div className="container">
@@ -82,6 +99,7 @@ export default function SyncProduct() {
                 <div className="withdraw_module withdraw_history">
                   <div className="withdraw_table_header">
                     <button
+                      onClick={handleImport}
                       disabled={selectedIds.length < 1}
                       className="btn btn--icon btn-sm btn-primary float-right">
                       <span className="lnr lnr-alarm"></span>Import To MyStore

@@ -1,3 +1,5 @@
+import { Input } from 'antd';
+
 /**
  *
  * @param {{
@@ -25,13 +27,13 @@ export default function MyInputType(props) {
   return (
     <div className="form-group">
       <label htmlFor="user_name">{title}</label>
-      <input
+      <Input
         id={id || name}
         type={type || 'text'}
         onChange={onChange}
         value={value || ''}
         className="text_field"
-        placeholder="Enter your username..."
+        placeholder={title}
       />
     </div>
   );
