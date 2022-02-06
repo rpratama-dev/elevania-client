@@ -1,6 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, Outlet } from 'react-router-dom';
 
 export default function Dashboard() {
+  const [page, setPage] = useState('manage_item');
+
+  const handlePage = (p) => setPage(p);
+
   return (
     <div className="dashboard-area">
       <div className="dashboard_menu_area">
@@ -8,53 +13,17 @@ export default function Dashboard() {
           <div className="row">
             <div className="col-md-12">
               <ul className="dashboard_menu">
-                <li className="active">
-                  <a href="dashboard.html">
-                    <span className="lnr lnr-home" />
-                    Dashboard
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-setting.html">
-                    <span className="lnr lnr-cog" />
-                    Setting
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-purchase.html">
-                    <span className="lnr lnr-cart" />
-                    Purchase
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-add-credit.html">
-                    <span className="lnr lnr-dice" />
-                    Add Credits
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-statement.html">
-                    <span className="lnr lnr-chart-bars" />
-                    Statements
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-upload.html">
-                    <span className="lnr lnr-upload" />
-                    Upload Items
-                  </a>
-                </li>
-                <li>
-                  <a href="dashboard-manage-item.html">
+                <li className={page === 'manage_item' ? 'active' : ''}>
+                  <Link onClick={() => handlePage('manage_item')} to="/admin/product">
                     <span className="lnr lnr-briefcase" />
-                    Manage Items
-                  </a>
+                    Manage Item
+                  </Link>
                 </li>
-                <li>
-                  <a href="dashboard-withdrawal.html">
-                    <span className="lnr lnr-briefcase" />
-                    Withdrawals
-                  </a>
+                <li className={page === 'import_item' ? 'active' : ''}>
+                  <Link onClick={() => handlePage('import_item')} to="/admin/product/sync">
+                    <span className="lnr lnr-download" />
+                    Impor Item
+                  </Link>
                 </li>
               </ul>
               {/* end /.dashboard_menu */}
