@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import checkImageURL from '../../helper/checkImageURL';
 import { formatNumber } from '../../helper/formatNumber';
+import CallServer from '../../utils/CallServer';
+import ServerApi from '../../utils/ServerApi';
 import ModalFormProduct from './ModalFormProduct';
 
 /**
@@ -53,6 +55,21 @@ export default function CardProduct(props) {
     handleShow();
   };
 
+  const handleConfirm = async () => {
+    try {
+      const url = `${ServerApi.URL_PRODUCT}/${product.prod_no}`;
+      const { message } = await CallServer({ method: 'delete', url });
+      if (message) alert(message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = () => {
+    const isConfirm = confirm(`Hapus ${product.name}?`);
+    if (isConfirm) handleConfirm();
+  };
+
   return (
     <>
       {show && (
@@ -66,7 +83,6 @@ export default function CardProduct(props) {
       <div className="product product--card">
         <div className="product__thumbnail">
           <img src={imgUrl} height="300" alt="Product Images" />
-
           <div className="prod_option">
             <a
               href="#test"
@@ -86,7 +102,7 @@ export default function CardProduct(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="delete">
+                  <Link to="#" onClick={handleDelete} className="delete">
                     <span className="lnr lnr-trash" />
                     Delete
                   </Link>
@@ -97,7 +113,7 @@ export default function CardProduct(props) {
         </div>
         <div className="product-desc">
           <a href="#test" className="product_title">
-            <h6>{product.name}</h6>
+            <h6 className="text--title">{product.name}</h6>
           </a>
           <ul className="titlebtm">
             {/* <li>
