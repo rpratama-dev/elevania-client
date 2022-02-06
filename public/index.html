@@ -2,29 +2,52 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <!-- viewport meta -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This My Store">
+    <meta name="keywords" content="My Store Elevania">
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <title>MYStore</title>
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/animate.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/fontello.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/lnr-icon.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/slick.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/trumbowyg.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/faq/style.css">
+    <!-- endinject -->
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.ico" />
+
+    <link rel="icon" sizes="16x16" href="%PUBLIC_URL%/favicon.ico">
+    <style>
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,5 +62,47 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0C5etf1GVmL_ldVAichWwFFVcDfa1y_c"></script>
+    <!-- inject:js -->
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery/jquery-1.12.3.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery/popper.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery/uikit.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/bootstrap.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/chart.bundle.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/grid.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery-ui.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery.barrating.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery.countdown.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery.counterup.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/jquery.easing1.3.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/owl.carousel.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/slick.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/tether.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/trumbowyg.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/vendor/waypoints.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/dashboard.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/main.js"></script>
+
+    <!-- endinject -->
+    <script>
+      $('[data-toggle="tooltip"]').tooltip();
+      const owl = $('.owl-carousel');
+      $(".owl-carousel").owlCarousel();
+      owl.owlCarousel({
+        items: 4,
+        loop: true,
+        margin: 10,
+        autoplay: true,
+        autoplayTimeout: 1000,
+        autoplayHoverPause: true
+      });
+      $('.play').on('click', function () {
+        owl.trigger('play.owl.autoplay', [1000])
+      });
+      $('.stop').on('click', function () {
+        owl.trigger('stop.owl.autoplay')
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,217 @@
+body,
+html {
+    height: 100% !important;
+    width: 1610px !important;
+}
+
+BODY {
+    font-family: arial;
+}
+
+.bg1 {
+    /* The image used */
+    background-image: url("./images/cert/cert-gempa1.jpg");
+    background-repeat: no-repeat;
+}
+
+
+.bg2 {
+    /* The image used */
+    background-image: url("/sertifikat/cert-gempa2.jpg");
+
+    /* Full height */
+    height: 1621px;
+    width: 2382px;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg_hide {
+    position: absolute;
+    background-color: white;
+    top: 10.5cm;
+    left: 29cm;
+    width: 10cm;
+    height: 1cm;
+}
+
+.p_nomorsertifikat {
+    position: absolute;
+    top: 13.7cm;
+    left: 17cm;
+    z-index: 100;
+    font-size: 25pt;
+}
+
+.p_namatertanggung {
+    position: absolute;
+    top: 18.5cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_alamattertanggung {
+    position: absolute;
+    top: 19.6cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_alamatobjek {
+    position: absolute;
+    top: 22.1cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_awal {
+    position: absolute;
+    top: 24.1cm;
+    left: 14.9cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_akhir {
+    position: absolute;
+    top: 24.1cm;
+    left: 25cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+
+
+.p_penggunaanbangunan {
+    position: absolute;
+    top: 29.2cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_premidasar {
+    position: absolute;
+    top: 27cm;
+    left: 31cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: right;
+}
+
+.p_beaadm {
+    position: absolute;
+    top: 28.1cm;
+    left: 31cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: right;
+}
+
+.p_total {
+    position: absolute;
+    top: 30.3cm;
+    left: 31cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: right;
+}
+
+.p_uraian {
+    position: absolute;
+    top: 34.8cm;
+    left: 3.5cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: center;
+}
+
+.p_noneskalasi {
+    position: absolute;
+    top: 41cm;
+    left: 1.35cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: center;
+}
+
+.p_hargapertanggungan1 {
+    position: absolute;
+    top: 34.8cm;
+    left: 31.5cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: center;
+}
+
+.p_hargapertanggungan2 {
+    position: absolute;
+    top: 43.7cm;
+    left: 31cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: right;
+}
+
+.p_nomorsertifikat2 {
+    position: absolute;
+    top: 43.7cm;
+    left: 16.5cm;
+    z-index: 100;
+    font-size: 18pt;
+    width: 290px;
+    text-align: right;
+}
+
+.p_klass {
+    position: absolute;
+    top: 27cm;
+    left: 15cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_rateklass {
+    position: absolute;
+    top: 27cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_zona {
+    position: absolute;
+    top: 28.2cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_ratepremi {
+    position: absolute;
+    top: 30.4cm;
+    left: 14cm;
+    z-index: 100;
+    font-size: 18pt;
+}
+
+.p_ttd {
+    position: absolute;
+    top: 46.5cm;
+    left: 30cm;
+    z-index: 100;
+    font-size: 18pt;
+}
