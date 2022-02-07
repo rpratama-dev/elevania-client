@@ -11,10 +11,15 @@ export default function SyncProduct() {
   const [finished, setFinished] = useState(false);
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const [importeds, setImporteds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    loadImported();
+  }, []);
 
   useEffect(() => {
     const bodyTable = document.getElementById('tb-product');
@@ -51,6 +56,16 @@ export default function SyncProduct() {
     }
   };
 
+  const loadImported = async () => {
+    try {
+      const url = `${ServerApi.URL_PRODUCT}/sync/imported`;
+      const { response } = await CallServer({ method: 'get', url });
+      setImporteds(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   /**
    *
    * @param {string} value
@@ -58,6 +73,9 @@ export default function SyncProduct() {
    * @param {boolean} checked
    */
   const handleChange = (value, _, checked) => {
+    const isImported = importeds.indexOf(value);
+    if (isImported > -1) return;
+
     const newIDs = [...selectedIds];
     const index = newIDs.indexOf(value);
     console.log(index, checked);
@@ -72,9 +90,8 @@ export default function SyncProduct() {
       setLoading(true);
       const url = `${ServerApi.URL_PRODUCT}/sync`;
       const data = { selectedProducts: selectedIds };
-      const { response } = await CallServer({ method: 'post', url, data });
-      const msg = response.message;
-      alert(msg);
+      const { message } = await CallServer({ method: 'post', url, data });
+      alert(message);
       navigate('/admin/product');
     } catch (error) {
       const msg = errorHandler(error);
@@ -87,6 +104,12 @@ export default function SyncProduct() {
   const handleImport = () => {
     let isConfirm = confirm(`Impor ${selectedIds.length} product`);
     if (isConfirm) handleSubmit();
+  };
+
+  const getChecked = (prod_no) => {
+    const isSelected = selectedIds.indexOf(prod_no);
+    const isImported = importeds.indexOf(prod_no);
+    return isSelected > -1 || isImported > -1;
   };
 
   return (
@@ -133,7 +156,7 @@ export default function SyncProduct() {
                                 label=""
                                 description=""
                                 value={el.no}
-                                checked={selectedIds.indexOf(el.no) > -1}
+                                checked={getChecked(el.no)}
                                 handleChange={handleChange}
                               />
                             </td>

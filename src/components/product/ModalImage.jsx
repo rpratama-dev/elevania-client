@@ -6,6 +6,7 @@ import CallServer from '../../utils/CallServer';
 import ServerApi from '../../utils/ServerApi';
 import Element from '../element';
 import MyComp from '../MyComp';
+import CardImage from './CardImage';
 
 const init = {
   name: '',
@@ -42,7 +43,7 @@ const init = {
  * }} props
  * @returns
  */
-export default function ModalFormProduct(props) {
+export default function ModalImage(props) {
   const { show, handleClose, title, product } = props;
   const [payload, setPayload] = useState({ ...init });
   const [errMsg, setErrMsg] = useState({ ...init });
@@ -165,7 +166,7 @@ export default function ModalFormProduct(props) {
 
   return (
     <>
-      <Modal size="lg" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header className="py-3">
           <button
             onClick={handleClose}
@@ -181,8 +182,23 @@ export default function ModalFormProduct(props) {
           <h6>{product && product.name}</h6>
         </Modal.Header>
         <Modal.Body>
-          <div className="row">
-            {fields.map((el, i) => Element[el.comp]({ ...el.data, index: i }))}
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="shortcode_module_title">
+                  <div className="dashboard__title">
+                    <h3>Gambar Produk</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              {product.images.map((el, i) => (
+                <div key={i} className="col-lg-3 col-md-4">
+                  <CardImage image={el} />
+                </div>
+              ))}
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

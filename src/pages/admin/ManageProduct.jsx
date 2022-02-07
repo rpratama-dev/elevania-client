@@ -8,7 +8,7 @@ import ServerApi from '../../utils/ServerApi';
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 export default function ManageProduct() {
   const [finished, setFinished] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState('');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
@@ -17,12 +17,18 @@ export default function ManageProduct() {
   const handleClose = () => setShow(false);
 
   useEffect(() => {
-    // const bodyTable = document.getElementById('tb-product');
-    // bodyTable.onscroll = () => {
-    //   if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
-    //     setPage(page + 1);
-    //   }
-    // };
+    if (!finished && !loading) loadData();
+  }, [page]);
+
+  useEffect(() => {
+    const bodyTable = document.getElementById('data-prd');
+    bodyTable.onscroll = function onscroll() {
+      if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
+        const las_prd = products.slice(-1)[0];
+        setPage(las_prd ? las_prd.id : '');
+        console.log('Trigered');
+      }
+    };
   }, [products]);
 
   useEffect(() => {
@@ -32,7 +38,7 @@ export default function ManageProduct() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const url = ServerApi.URL_PRODUCT;
+      const url = `${ServerApi.URL_PRODUCT}?last_id=${page}`;
       const { response } = await CallServer({ method: 'get', url });
       const temps = [...products, ...response.slice(0)];
       if (temps.length > 0) {
@@ -75,11 +81,16 @@ export default function ManageProduct() {
               </div>
             </div>
           </div>
-          {products.map((el, i) => (
-            <div key={i} className="col-lg-4 col-md-6">
-              <CardProduct product={el} />
-            </div>
-          ))}
+          <div
+            className="row infinity_scroll"
+            id="data-prd"
+            style={{ height: 'calc(100vh - 250px)', overflow: 'auto', padding: '0 15px 0 15px' }}>
+            {products.map((el, i) => (
+              <div key={i} className="col-lg-4 col-md-6">
+                <CardProduct product={el} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>

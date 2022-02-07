@@ -8,6 +8,7 @@ import { formatNumber } from '../../helper/formatNumber';
 import CallServer from '../../utils/CallServer';
 import ServerApi from '../../utils/ServerApi';
 import ModalFormProduct from './ModalFormProduct';
+import ModalImage from './ModalImage';
 
 /**
  *
@@ -36,10 +37,10 @@ import ModalFormProduct from './ModalFormProduct';
 export default function CardProduct(props) {
   const { product } = props;
   const [imgUrl, setImsgUrl] = useState(product.image_url);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState({ product: false, image: false });
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleShow = (key) => setShow({ ...show, [key]: true });
+  const handleClose = () => setShow({ product: false, image: false });
 
   useEffect(() => {
     checkLogo(product.image_url);
@@ -52,7 +53,11 @@ export default function CardProduct(props) {
   };
 
   const handleEdit = () => {
-    handleShow();
+    handleShow('product');
+  };
+
+  const handleEditImage = () => {
+    handleShow('image');
   };
 
   const handleConfirm = async () => {
@@ -72,11 +77,19 @@ export default function CardProduct(props) {
 
   return (
     <>
-      {show && (
+      {show.product && (
         <ModalFormProduct
-          show={show}
+          show={show.product}
           handleClose={handleClose}
           title="Edit Produk"
+          product={product}
+        />
+      )}
+      {show.image && (
+        <ModalImage
+          show={show.image}
+          handleClose={handleClose}
+          title="Edit Image"
           product={product}
         />
       )}
@@ -99,6 +112,12 @@ export default function CardProduct(props) {
                   <Link to="#" onClick={handleEdit}>
                     <span className="lnr lnr-pencil" />
                     Edit
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" onClick={handleEditImage}>
+                    <span className="lnr lnr-pencil" />
+                    Edit Gambar
                   </Link>
                 </li>
                 <li>
