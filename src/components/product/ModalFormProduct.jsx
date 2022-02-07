@@ -59,14 +59,15 @@ export default function ModalFormProduct(props) {
     }
   }, []);
 
-  const handleCheckSKU = async () => {
+  const handleCheckSKU = async (sku) => {
     let msg = '';
     try {
-      const url = `${ServerApi.URL_PRODUCT}/sku`;
-      const response = await CallServer({ method: 'get', url });
+      const url = `${ServerApi.URL_PRODUCT}/${sku}/sku`;
+      const { response } = await CallServer({ method: 'get', url });
+      if (response.id) msg = 'SKU Sudah Terdaftar';
+      console.log(response);
     } catch (error) {
       console.error(error);
-      msg = 'SKU Sudah Terdaftar';
     } finally {
       setErrMsg({ ...errMsg, sku: msg });
     }
@@ -80,7 +81,7 @@ export default function ModalFormProduct(props) {
       }
       case 'sku': {
         if (!value) return 'SKU Wajib disertakan';
-        handleCheckSKU();
+        handleCheckSKU(value);
         break;
       }
       case 'price': {
@@ -95,6 +96,21 @@ export default function ModalFormProduct(props) {
         break;
     }
     return '';
+  };
+
+  const validate = () => {
+    const keys = ['name', 'sku', 'price'];
+    if (payload.sku) keys.splice(1, 1);
+    const newErrMsg = { ...errMsg };
+    let isValid = true;
+    keys.forEach((el, i) => {
+      const msg = validation(el, payload[el]);
+      if (msg) isValid = false;
+      newErrMsg[el] = msg;
+    });
+    if (errMsg.sku) isValid = false;
+    setErrMsg(newErrMsg);
+    return isValid;
   };
 
   const handleTextEditor = (content, name) => {
@@ -141,8 +157,11 @@ export default function ModalFormProduct(props) {
   };
 
   const handleSubmit = () => {
-    const isConfirm = confirm('Simpan Perubahan?');
-    if (isConfirm) handleConfirm();
+    const isValid = validate();
+    if (isValid) {
+      const isConfirm = confirm('Simpan Perubahan?');
+      if (isConfirm) handleConfirm();
+    } else alert('Periksa kembali data yang kamu input');
   };
 
   return (
