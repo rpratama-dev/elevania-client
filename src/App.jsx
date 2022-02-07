@@ -4,23 +4,26 @@ import MainLayout from './layouts/main';
 // import AuthStore from './store/auth.store';
 import { AdmDashboard, AdmManageProduct, AdmSyncProduct, Login } from './pages';
 import { ProductDashboard } from './pages';
+import ProductStore from './store/ProductStore';
 
 function App() {
   // const authSstore = new AuthStore();
+
+  const store = new ProductStore();
+  console.log('store app', store);
   return (
     <>
       <MainLayout />
 
       <Routes>
         <Route path="login" element={<Login />} />
-
         <Route path="admin" element={<AdmDashboard />}>
-          <Route index element={<AdmManageProduct />} />
+          <Route index element={<AdmManageProduct store={store} />} />
           <Route path="product" element={<AdmManageProduct />} />
           <Route path="product/sync" element={<AdmSyncProduct />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
-        <Route index element={<ProductDashboard />} />
+        <Route index element={<ProductDashboard store={store} />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </>

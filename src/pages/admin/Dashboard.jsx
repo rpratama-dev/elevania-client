@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-export default function Dashboard() {
+function Dashboard() {
   const [page, setPage] = useState('manage_item');
 
   const handlePage = (p) => setPage(p);
@@ -40,3 +41,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;

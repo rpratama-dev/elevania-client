@@ -31,11 +31,14 @@ import ModalImage from './ModalImage';
  *      },
  *    ],
  *  },
+ *  config: {
+ *    isCustomer: boolean,
+ *  },
  * }} props
  * @returns
  */
 export default function CardProduct(props) {
-  const { product } = props;
+  const { product, config = {} } = props;
   const [imgUrl, setImsgUrl] = useState(product.image_url);
   const [show, setShow] = useState({ product: false, image: false });
 
@@ -96,56 +99,58 @@ export default function CardProduct(props) {
       <div className="product product--card">
         <div className="product__thumbnail">
           <img src={imgUrl} height="300" alt="Product Images" />
-          <div className="prod_option">
-            <a
-              href="#test"
-              id="drop2"
-              className="dropdown-trigger"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true">
-              <span className="lnr lnr-cog setting-icon" />
-            </a>
-            <div className="options dropdown-menu" aria-labelledby="drop2">
-              <ul>
-                <li>
-                  <Link to="#" onClick={handleEdit}>
-                    <span className="lnr lnr-pencil" />
-                    Edit
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" onClick={handleEditImage}>
-                    <span className="lnr lnr-pencil" />
-                    Edit Gambar
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" onClick={handleDelete} className="delete">
-                    <span className="lnr lnr-trash" />
-                    Delete
-                  </Link>
-                </li>
-              </ul>
+          {!config.isCustomer && (
+            <div className="prod_option">
+              <a
+                href="#test"
+                id="drop2"
+                className="dropdown-trigger"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true">
+                <span className="lnr lnr-cog setting-icon" />
+              </a>
+              <div className="options dropdown-menu" aria-labelledby="drop2">
+                <ul>
+                  <li>
+                    <Link to="#" onClick={handleEdit}>
+                      <span className="lnr lnr-pencil" />
+                      Edit
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" onClick={handleEditImage}>
+                      <span className="lnr lnr-pencil" />
+                      Edit Gambar
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" onClick={handleDelete} className="delete">
+                      <span className="lnr lnr-trash" />
+                      Delete
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="product-desc">
           <a href="#test" className="product_title">
-            <h6 className="text--title">{product.name}</h6>
+            <h6 className="text--title">{unescape(product.name)}</h6>
           </a>
           <ul className="titlebtm">
             <li className="product_cat">
               <a href="#a">
                 <span className="lnr lnr-book" />
-                {product.sku}
+                {unescape(product.sku)}
               </a>
             </li>
           </ul>
 
           <div
             className="text--overflow"
-            dangerouslySetInnerHTML={{ __html: product.description }}
+            dangerouslySetInnerHTML={{ __html: unescape(product.description) }}
           />
         </div>
         <div className="product-purchase">

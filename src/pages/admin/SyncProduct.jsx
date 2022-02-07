@@ -14,11 +14,15 @@ export default function SyncProduct() {
   const [importeds, setImporteds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     loadImported();
+    return () => {
+      setIsLoaded(false);
+    };
   }, []);
 
   useEffect(() => {
@@ -45,14 +49,13 @@ export default function SyncProduct() {
         const newProducts = temps.filter((value, index) => {
           return selfs.indexOf(value.sku) === index;
         });
-        setProducts(newProducts);
-      } else setProducts(temps);
-      console.log(response);
+        if (isLoaded) setProducts(newProducts);
+      }
       if (response.length < 1) setFinished(true);
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false);
+      if (isLoaded) setLoading(false);
     }
   };
 
@@ -125,7 +128,7 @@ export default function SyncProduct() {
                       onClick={handleImport}
                       disabled={selectedIds.length < 1}
                       className="btn btn--icon btn-sm btn-primary float-right">
-                      <span className="lnr lnr-alarm"></span>Import To MyStore
+                      <span className="lnr lnr-download"></span>Import To MyStore
                     </button>
                     <div>
                       <h3>Produk Pada Elevenia</h3>
