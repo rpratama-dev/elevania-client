@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import CardProduct from '../../components/product/CardProduct';
 import ModalFormProduct from '../../components/product/ModalFormProduct';
@@ -6,50 +7,32 @@ import CallServer from '../../utils/CallServer';
 import ServerApi from '../../utils/ServerApi';
 
 /* eslint-disable jsx-a11y/role-supports-aria-props */
-export default function ManageProduct() {
-  const [finished, setFinished] = useState(false);
-  const [page, setPage] = useState('');
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+/**
+ *
+ * @param {{
+ *  config: {
+ *    isCustomer: boolean,
+ *  }
+ * }} props
+ * @returns
+ */
+function ManageProduct(props) {
+  const { config = {}, store } = props;
+  const { products } = store;
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
   useEffect(() => {
-    if (!finished && !loading) loadData();
-  }, [page]);
-
-  useEffect(() => {
     const bodyTable = document.getElementById('data-prd');
     bodyTable.onscroll = function onscroll() {
       if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
         const las_prd = products.slice(-1)[0];
-        setPage(las_prd ? las_prd.id : '');
-        console.log('Trigered');
+        store.fetchData(las_prd.id);
       }
     };
   }, [products]);
-
-  useEffect(() => {
-    if (!finished && !loading) loadData();
-  }, [page]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const url = `${ServerApi.URL_PRODUCT}?last_id=${page}`;
-      const { response } = await CallServer({ method: 'get', url });
-      const temps = [...products, ...response.slice(0)];
-      if (temps.length > 0) {
-        setProducts(temps);
-      } else setFinished(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleBtnAdd = () => {
     handleShow();
@@ -63,36 +46,41 @@ export default function ManageProduct() {
           handleClose={handleClose}
           title="Tambah Produk"
           product={null}
+          {...props}
         />
       )}
       <div className="container dashboard-edit">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="dashboard_title_area">
-              <div className="">
-                <div className="dashboard__title">
-                  <button
-                    onClick={handleBtnAdd}
-                    className="btn btn--icon btn-sm btn-primary float-right">
-                    <span className="lnr lnr-plus-circle"></span>Tambah Produk
-                  </button>
-                  <h3>Manage Produk</h3>
+        {!config.isCustomer && (
+          <div className="row">
+            <div className="col-md-12">
+              <div className="dashboard_title_area">
+                <div className="">
+                  <div className="dashboard__title">
+                    <button
+                      onClick={handleBtnAdd}
+                      className="btn btn--icon btn-sm btn-primary float-right">
+                      <span className="lnr lnr-plus-circle"></span>Tambah Produk
+                    </button>
+                    <h3>Manage Produk</h3>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div
-            className="row infinity_scroll"
-            id="data-prd"
-            style={{ height: 'calc(100vh - 250px)', overflow: 'auto', padding: '0 15px 0 15px' }}>
-            {products.map((el, i) => (
-              <div key={i} className="col-lg-4 col-md-6">
-                <CardProduct product={el} />
-              </div>
-            ))}
-          </div>
+        )}
+        <div
+          className="row infinity_scroll"
+          id="data-prd"
+          style={{ height: 'calc(100vh - 150px)', overflow: 'auto' }}>
+          {products.map((el, i) => (
+            <div key={i} className="col-lg-4 col-md-6">
+              <CardProduct product={el} {...props} />
+            </div>
+          ))}
         </div>
       </div>
     </>
   );
 }
+
+export default observer(ManageProduct);

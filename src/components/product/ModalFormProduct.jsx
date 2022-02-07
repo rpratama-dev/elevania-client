@@ -43,18 +43,21 @@ const init = {
  * @returns
  */
 export default function ModalFormProduct(props) {
-  const { show, handleClose, title, product } = props;
+  const { show, handleClose, title, product, store } = props;
   const [payload, setPayload] = useState({ ...init });
   const [errMsg, setErrMsg] = useState({ ...init });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (product) {
       const { id, prod_no, name, sku, price, description } = product;
+      const parseing = {};
       const newPyd = { id, prod_no, name, sku, price };
-      setPayload(newPyd);
+      Object.keys(newPyd).forEach((el) => {
+        parseing[el] = unescape(product[el]);
+      });
+      setPayload(parseing);
       setTimeout(() => {
-        setPayload({ ...newPyd, description });
+        setPayload({ ...parseing, description: unescape(description) });
       }, 1000);
     }
   }, []);
@@ -64,7 +67,10 @@ export default function ModalFormProduct(props) {
     try {
       const url = `${ServerApi.URL_PRODUCT}/${sku}/sku`;
       const { response } = await CallServer({ method: 'get', url });
-      if (response.id) msg = 'SKU Sudah Terdaftar';
+      if (response.id) {
+        if (product && product.prod_no === response.prod_no) msg = '';
+        else msg = 'SKU Sudah Terdaftar';
+      }
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -139,20 +145,14 @@ export default function ModalFormProduct(props) {
   const fields = MyComp.product(payload, errMsg, handleChange);
 
   const handleConfirm = async () => {
-    try {
-      setLoading(true);
-      const tempUrl = ServerApi.URL_PRODUCT;
-      const url = product ? `${tempUrl}/${product.prod_no}` : tempUrl;
-      const method = product ? 'put' : 'post';
-      const { response, message } = await CallServer({ method, url, data: payload });
-      if (message) alert(message);
-      handleClose();
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    const newPayload = { ...payload };
+    if (product && product.prod_no) newPayload.prod_no = product.prod_no;
+    store.addProduct(!!product, newPayload, (message) => {
+      if (message) {
+        alert(message);
+        handleClose();
+      }
+    });
   };
 
   const handleSubmit = () => {
@@ -178,7 +178,7 @@ export default function ModalFormProduct(props) {
           <h3 className="modal-title mb-0" id="rating_modal">
             {title}
           </h3>
-          <h6>{product && product.name}</h6>
+          <h6>{product && unescape(product.name)}</h6>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
@@ -193,15 +193,15 @@ export default function ModalFormProduct(props) {
             variant="secondary"
             className="btn btn--round modal_close"
             onClick={handleClose}
-            disabled={loading}>
+            disabled={store.loading}>
             Close
           </Button>
           <Button
             onClick={handleSubmit}
             variant="primary"
             className="btn btn--round btn--sm"
-            disabled={loading}>
-            {loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+            disabled={store.loading}>
+            {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
             Submit
           </Button>
         </Modal.Footer>

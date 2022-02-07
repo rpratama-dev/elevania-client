@@ -11,6 +11,7 @@ import ServerApi from '../../utils/ServerApi';
 function Login() {
   const [payload, setPayload] = useState({ email: '', password: '' });
   const [errMsg, setErrMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   /**
@@ -26,9 +27,11 @@ function Login() {
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       const url = ServerApi.URL_LOGIN;
       const { response } = await CallServer({ method: 'post', url, data: payload });
       MyStorage.setAccessToken(response.token);
+      MyStorage.setUser(response.user);
       if (response.user.role === 'admin') {
         navigate('/admin');
       } else navigate('/');
@@ -39,6 +42,8 @@ function Login() {
         setErrMsg(msg);
         alert(msg);
       } else console.log('Login Error', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,7 +67,9 @@ function Login() {
                     <button
                       onClick={handleLogin}
                       className="btn btn--md btn--round float-right"
+                      disabled={loading}
                       type="submit">
+                      {loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
                       Login Sekarang
                     </button>
                   </div>

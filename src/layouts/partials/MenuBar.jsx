@@ -1,9 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import MyStorage from '../../utils/MyStorage';
 
 export default function MenuBar() {
-  const isLogedIn = false;
-  const getUserName = () => 'Pengunjung';
-  const handleLogout = () => alert('Logout');
+  const navigate = useNavigate();
+
+  const isLogedIn = MyStorage.getAccessToken() ? true : false;
+  const getUserName = () => {
+    const user = MyStorage.getUser();
+    if (user) return user.full_name;
+    else return 'Pengunjung';
+  };
+  const handleLogout = () => {
+    MyStorage.clear();
+    navigate('/login');
+  };
 
   return (
     <div className="menu-area menu--style1 sticky-top">
@@ -37,27 +47,9 @@ export default function MenuBar() {
                         <div className="dropdowns dropdown--author mt-2">
                           <ul>
                             <li>
-                              <Link to="/account?tab=purchase">
-                                <span className="lnr lnr-cart" />
-                                Pesanan
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="/account?tab=policy">
-                                <span className="lnr lnr-license" />
-                                Polis
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="/account?tab=claim">
-                                <span className="lnr lnr-briefcase" />
-                                Klaim
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="/account?tab=profile">
+                              <Link to="/admin">
                                 <span className="lnr lnr-user" />
-                                Profil
+                                Admin
                               </Link>
                             </li>
                             <li>
@@ -86,25 +78,6 @@ export default function MenuBar() {
                       </div>
                     )}
                   </nav>
-
-                  {/* {isLogedIn ? (
-                  <div className="autor__info">
-                    <p className="name">{getUserName()}</p>
-                    <p className="ammount">$20.45</p>
-                  </div>
-                ) : (
-                  <>
-                    <NavLink
-                      to="/login"
-                      // onClick={handleLogin}
-                      className="btn btn--round btn--danger  btn--xs mr-2">
-                      Login
-                    </NavLink>
-                    <NavLink to="/register" className="btn btn--round btn--secondary btn--xs">
-                      Daftar
-                    </NavLink>
-                  </>
-                )} */}
                 </div>
                 {/* start mainmenu__search */}
               </div>
