@@ -1,9 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 function Dashboard() {
   const [page, setPage] = useState('manage_item');
+
+  useEffect(() => {
+    const { pathname } = window.location;
+    if (pathname.split('/').includes('sync')) setPage('import_item');
+    else setPage('manage_item');
+  }, []);
 
   const handlePage = (p) => setPage(p);
 

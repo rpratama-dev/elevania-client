@@ -31,6 +31,7 @@ function Login() {
       const url = ServerApi.URL_LOGIN;
       const { response } = await CallServer({ method: 'post', url, data: payload });
       MyStorage.setAccessToken(response.token);
+      MyStorage.setUser(response.user);
       if (response.user.role === 'admin') {
         navigate('/admin');
       } else navigate('/');

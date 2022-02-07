@@ -18,7 +18,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="admin" element={<AdmDashboard />}>
           <Route index element={<AdmManageProduct store={store} />} />
-          <Route path="product" element={<AdmManageProduct />} />
+          <Route path="product" element={<AdmManageProduct store={store} />} />
           <Route path="product/sync" element={<AdmSyncProduct />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
