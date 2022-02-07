@@ -14,7 +14,6 @@ function App() {
   return (
     <>
       <MainLayout />
-
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="admin" element={<AdmDashboard />}>

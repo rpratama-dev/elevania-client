@@ -18,10 +18,8 @@ import ServerApi from '../../utils/ServerApi';
  */
 function ManageProduct(props) {
   const { config = {}, store } = props;
-  const { finished, products, loading } = store;
-  let { page } = store;
+  const { products } = store;
   const [show, setShow] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(true);
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -36,22 +34,6 @@ function ManageProduct(props) {
     };
   }, [products]);
 
-  const handleAddOwner = () => {
-    const firstName = prompt('Firstname?');
-    const lastName = prompt('Lastname?');
-    store.createOwner({ id: Date.now(), firstName, lastName });
-  };
-
-  const handleUpdateOwner = (owner) => {
-    owner.firstName = prompt('Firstname?', owner.firstName);
-    owner.lastName = prompt('Lastname?', owner.lastName);
-    store.updateOwner(owner.id, owner);
-  };
-
-  const handleDeleteOwner = (owner) => {
-    store.deleteOwner(owner.id);
-  };
-
   const handleBtnAdd = () => {
     handleShow();
   };
@@ -64,6 +46,7 @@ function ManageProduct(props) {
           handleClose={handleClose}
           title="Tambah Produk"
           product={null}
+          {...props}
         />
       )}
       <div className="container dashboard-edit">

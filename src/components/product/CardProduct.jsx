@@ -38,7 +38,7 @@ import ModalImage from './ModalImage';
  * @returns
  */
 export default function CardProduct(props) {
-  const { product, config = {} } = props;
+  const { product, config = {}, store } = props;
   const [imgUrl, setImsgUrl] = useState(product.image_url);
   const [show, setShow] = useState({ product: false, image: false });
 
@@ -64,13 +64,9 @@ export default function CardProduct(props) {
   };
 
   const handleConfirm = async () => {
-    try {
-      const url = `${ServerApi.URL_PRODUCT}/${product.prod_no}`;
-      const { message } = await CallServer({ method: 'delete', url });
-      if (message) alert(message);
-    } catch (error) {
-      console.error(error);
-    }
+    store.deleteProduct(product.prod_no, (msg) => {
+      if (msg) alert(msg);
+    });
   };
 
   const handleDelete = () => {
@@ -86,6 +82,7 @@ export default function CardProduct(props) {
           handleClose={handleClose}
           title="Edit Produk"
           product={product}
+          {...props}
         />
       )}
       {show.image && (
