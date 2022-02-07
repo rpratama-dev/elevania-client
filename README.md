@@ -1,14 +1,16 @@
 # Getting Started with Project Test - MyStore x Elevenia
 
-## TECH STACK:
+## TECH STACK
 
 ### Frontend:
   - UI library: React.js
   - State management: MobX (https://mobx.js.org/)
+  - https://github.com/rpratama-dev/elevania-client.git
 
 ### Backend:
   - JS Platform: Node.js (https://nodejs.org/)
   - API framework: Hapi.js (https://hapijs.com/)
+  - https://github.com/rpratama-dev/elevania-server.git
 
 ### Database:
   - Postgresql
@@ -36,11 +38,11 @@
 
 ## SETUP SERVER
 
-- INSTALASI: 
+### INSTALASI: 
   - Jalankan Perintah Berikut Untuk Menginstall Package Dependencies
   - ```yarn``` atau ```npm install```
 
-- DATABASE
+### DATABASE:
   - Sudah Install DB PostgreSQL
   - Buat Database ```db_ecommerce```
   - Config Database ```./config/config.js```
@@ -55,7 +57,7 @@
     }
     ```
 
-- ENVIRONTMENT: 
+### ENVIRONTMENT: 
   - Buat File di root directory ```.env.local```
   - ISI ENV
   	```
@@ -64,15 +66,11 @@
       SALT=10
     ```
 
-- MIGRATION: 
+### MIGRATION: 
   - Setelah semua config dibuat jalankan migration
   - ```sequelize db:migrate```
 
-- START SERVER: 
-  - Setelah menjalankan migration
-  - ```sequelize db:migrate```
-
-- START SERVER: 
+### START SERVER: 
   - Jalankan Perintah Beikut
   - ```yarn start```
   - Setelah Itu Pastikan ```Pair Key``` untuk JWT sudah tergenerate
