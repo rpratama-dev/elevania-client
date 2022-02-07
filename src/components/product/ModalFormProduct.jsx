@@ -46,7 +46,6 @@ export default function ModalFormProduct(props) {
   const { show, handleClose, title, product, store } = props;
   const [payload, setPayload] = useState({ ...init });
   const [errMsg, setErrMsg] = useState({ ...init });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -149,7 +148,6 @@ export default function ModalFormProduct(props) {
     const newPayload = { ...payload };
     if (product && product.prod_no) newPayload.prod_no = product.prod_no;
     store.addProduct(!!product, newPayload, (message) => {
-      console.log(message);
       if (message) {
         alert(message);
         handleClose();
@@ -195,15 +193,15 @@ export default function ModalFormProduct(props) {
             variant="secondary"
             className="btn btn--round modal_close"
             onClick={handleClose}
-            disabled={loading}>
+            disabled={store.loading}>
             Close
           </Button>
           <Button
             onClick={handleSubmit}
             variant="primary"
             className="btn btn--round btn--sm"
-            disabled={loading}>
-            {loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+            disabled={store.loading}>
+            {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
             Submit
           </Button>
         </Modal.Footer>

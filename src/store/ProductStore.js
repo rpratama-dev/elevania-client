@@ -13,7 +13,7 @@ class ProductStore {
       loading: observable,
       finished: observable,
       actionSetLoading: action,
-      addProduct: action,
+      // addProduct: action,
       actionSetFinish: action,
       loadData: action,
       actionSetProduct: action,
@@ -58,17 +58,21 @@ class ProductStore {
       const method = isEdit ? 'put' : 'post';
       const { response, message } = await CallServer({ method, url, data: payload });
       if (isEdit) {
-        const index = this.products.map((el) => el.prod_no).indexOf(response.prod_no);
+        const index = this.products.map((el) => el.prod_no).indexOf(String(response.prod_no));
         if (index > -1) {
-          const newProduccts = [...this.products];
+          const newProduccts = JSON.parse(JSON.stringify(this.products));
           const temps = newProduccts[index].images;
           newProduccts.splice(index, 1, { ...response, images: temps });
           this.actionSetProduct(newProduccts);
         }
-      } else this.products = [response, ...this.products];
+      } else {
+        const newProducts = [response, ...JSON.parse(JSON.stringify(this.products))];
+        this.actionSetProduct(newProducts);
+      }
       if (cb) cb(message, null);
     } catch (error) {
       console.error(error);
+      this.actionSetLoading(false);
     } finally {
       this.actionSetLoading(false);
     }
@@ -87,7 +91,7 @@ class ProductStore {
     } catch (error) {
       console.log(error);
     } finally {
-      this.actionSetLoading(true);
+      this.actionSetLoading(false);
     }
   }
 
