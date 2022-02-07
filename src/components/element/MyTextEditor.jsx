@@ -2,13 +2,16 @@ import React, { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
 const apiKey = 's9qvv7eipw34ld2ajw4fwwjky5vc4pfio18j2joe921pyx6e';
-export default function MyTextEditor({ id, title, content, handleEditorChange }) {
+export default function MyTextEditor(props) {
+  const { id, title, content, handleEditorChange, errMsg } = props;
+
   const editorRef = useRef(null);
 
   return (
-    <div className="form-group">
+    <div className="form-group was-validated">
       <label htmlFor="content">{title}</label>
       {/* <textarea id="elm1" name="area"></textarea> */}
+      {errMsg && <div className="invalid-feedback d-block">{errMsg}!</div>}
 
       <Editor
         onInit={(evt, editor) => (editorRef.current = editor)}

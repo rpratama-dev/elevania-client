@@ -1,4 +1,4 @@
-import MyInputType from './MyInputTpe';
+import MyInputType from './MyInputType';
 import MyTextEditor from './MyTextEditor';
 
 class Element {
@@ -12,6 +12,7 @@ class Element {
    *  handleChange: (value: string, name: string) => void,
    *  index: number,
    *  parentClassName: string,
+   *  errMsg: string,
    * }} data
    * @returns
    */
@@ -23,6 +24,7 @@ class Element {
           type={data.type}
           name={data.name}
           value={data.value}
+          errMsg={data.errMsg}
           handleChange={data.handleChange}
         />
       </div>
@@ -38,6 +40,7 @@ class Element {
    *  handleChange: (value: string, editor: any) => void,
    *  index: number,
    *  parentClassName: string,
+   *  errMsg: string,
    * }} data
    * @returns
    */
@@ -48,6 +51,7 @@ class Element {
           id={`content-${data.id || data.name}`}
           title={data.title}
           content={data.value}
+          errMsg={data.errMsg}
           handleEditorChange={(content) => data.handleChange(content, data.name)}
         />
       </div>

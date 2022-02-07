@@ -45,6 +45,7 @@ const init = {
 export default function ModalFormProduct(props) {
   const { show, handleClose, title, product } = props;
   const [payload, setPayload] = useState({ ...init });
+  const [errMsg, setErrMsg] = useState({ ...init });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -58,23 +59,69 @@ export default function ModalFormProduct(props) {
     }
   }, []);
 
+  const handleCheckSKU = async () => {
+    let msg = '';
+    try {
+      const url = `${ServerApi.URL_PRODUCT}/sku`;
+      const response = await CallServer({ method: 'get', url });
+    } catch (error) {
+      console.error(error);
+      msg = 'SKU Sudah Terdaftar';
+    } finally {
+      setErrMsg({ ...errMsg, sku: msg });
+    }
+  };
+
+  const validation = (field, value) => {
+    switch (field) {
+      case 'name': {
+        if (!value) return 'Nama produk wajin diisi';
+        break;
+      }
+      case 'sku': {
+        if (!value) return 'SKU Wajib disertakan';
+        handleCheckSKU();
+        break;
+      }
+      case 'price': {
+        if (!value) return 'Harga produk wajib diisi';
+        else if (Number.isNaN(+value)) return 'Harga tidak valid';
+        break;
+      }
+      case 'description':
+        break;
+
+      default:
+        break;
+    }
+    return '';
+  };
+
   const handleTextEditor = (content, name) => {
     let temp = content;
     if (parseEditorHtml(content)) {
       temp = '';
     }
-    setPayload({ ...payload, [name]: temp });
-    return true;
+    return temp;
   };
 
   const handleChange = (value, name) => {
-    if (name === 'description') {
-      console.log(value, name);
-      handleTextEditor(value, name);
-    } else setPayload({ ...payload, [name]: value });
+    switch (name) {
+      case 'sku':
+        if (value) value = value.toUpperCase();
+        break;
+      case 'description':
+        value = handleTextEditor(value);
+        break;
+      default:
+        break;
+    }
+    const msg = validation(name, value);
+    setErrMsg({ ...errMsg, [name]: msg });
+    setPayload({ ...payload, [name]: value });
   };
 
-  const fields = MyComp.product(payload, handleChange);
+  const fields = MyComp.product(payload, errMsg, handleChange);
 
   const handleConfirm = async () => {
     try {

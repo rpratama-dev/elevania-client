@@ -1,5 +1,5 @@
 class MyComp {
-  static product(payload, handleChange) {
+  static product(payload, errMsg, handleChange) {
     const fields = [
       {
         comp: 'myInputType',
@@ -9,6 +9,7 @@ class MyComp {
           type: 'text',
           name: 'name',
           value: payload.name,
+          errMsg: errMsg.name,
           handleChange: handleChange,
         },
       },
@@ -20,6 +21,7 @@ class MyComp {
           type: 'text',
           name: 'sku',
           value: payload.sku,
+          errMsg: errMsg.sku,
           handleChange: handleChange,
         },
       },
@@ -31,6 +33,7 @@ class MyComp {
           type: 'number',
           name: 'price',
           value: payload.price,
+          errMsg: errMsg.price,
           handleChange: handleChange,
         },
       },
@@ -52,6 +55,7 @@ class MyComp {
           title: 'Deskripsi Produk',
           name: 'description',
           value: payload.description,
+          errMsg: errMsg.description,
           handleChange: handleChange,
         },
       },

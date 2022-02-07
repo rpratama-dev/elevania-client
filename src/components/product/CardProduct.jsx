@@ -116,11 +116,6 @@ export default function CardProduct(props) {
             <h6 className="text--title">{product.name}</h6>
           </a>
           <ul className="titlebtm">
-            {/* <li>
-              <p>
-                <a href="#">AazzTech</a>
-              </p>
-            </li> */}
             <li className="product_cat">
               <a href="#a">
                 <span className="lnr lnr-book" />

@@ -1,4 +1,5 @@
 import { Input } from 'antd';
+import { useState } from 'react';
 
 /**
  *
@@ -7,13 +8,14 @@ import { Input } from 'antd';
  *  type: string,
  *  name: string,
  *  value: string,
+ *  errMsg: string,
  *  handleChange: (value: string, name: string) => void,
  * }} props
  * @returns
  */
 export default function MyInputType(props) {
-  const { title, type, name, id, value, handleChange } = props;
-
+  const { title, type, name, id, value, errMsg, handleChange } = props;
+  const [isChange, setIsChange] = useState(false);
   /**
    *
    * @param {{
@@ -22,19 +24,21 @@ export default function MyInputType(props) {
    */
   const onChange = (e) => {
     handleChange(e.target.value, name);
+    setIsChange(true);
   };
 
   return (
-    <div className="form-group">
+    <div className={`form-group ${errMsg ? 'needs-validated' : isChange ? 'was-validated' : ''} `}>
       <label htmlFor="user_name">{title}</label>
       <Input
         id={id || name}
         type={type || 'text'}
         onChange={onChange}
         value={value || ''}
-        className="text_field"
+        className={`form-control ${errMsg ? 'is-invalid' : isChange ? 'is-valid' : ''}`}
         placeholder={title}
       />
+      {errMsg && <div className="invalid-feedback d-block">{errMsg}!</div>}
     </div>
   );
 }
