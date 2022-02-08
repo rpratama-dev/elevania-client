@@ -1,49 +1,36 @@
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Element from '../../components/element';
 import MyComp from '../../components/MyComp';
-import CallServer from '../../utils/CallServer';
-import errorHandler from '../../utils/errorHandler';
-import MyStorage from '../../utils/MyStorage';
-import ServerApi from '../../utils/ServerApi';
 
-function Login() {
-  const [payload, setPayload] = useState({ email: '', password: '' });
-  const [errMsg, setErrMsg] = useState('');
-  const [loading, setLoading] = useState(false);
+function Login({ store }) {
+  // const [payload, setPayload] = useState({ email: '', password: '' });
+  // const [errMsg, setErrMsg] = useState('');
+  // const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
   /**
    *
    * @param {string} value
    * @param {string} name
    */
   const handleChange = (value, name) => {
-    setPayload({ ...payload, [name]: value });
+    store.setPayload(value, name);
   };
 
-  const fields = MyComp.login(payload, handleChange);
+  const fields = MyComp.login(store.loginPayload, handleChange);
 
   const handleLogin = async () => {
     try {
-      setLoading(true);
-      const url = ServerApi.URL_LOGIN;
-      const { response } = await CallServer({ method: 'post', url, data: payload });
-      MyStorage.setAccessToken(response.token);
-      MyStorage.setUser(response.user);
-      if (response.user.role === 'admin') {
-        navigate('/admin');
-      } else navigate('/');
-      console.log('Reponse asd', response);
+      await store.handleLogin();
+      if (store.userLogin) {
+        if (store.userLogin.role === 'admin') {
+          navigate('/admin');
+        } else navigate('/');
+      }
     } catch (error) {
-      const msg = errorHandler(error);
-      if (typeof msg === 'string') {
-        setErrMsg(msg);
-        alert(msg);
-      } else console.log('Login Error', error);
-    } finally {
-      setLoading(false);
+      console.error('error login', error);
     }
   };
 
@@ -60,16 +47,16 @@ function Login() {
                 </div>
                 <div className="row login--form">
                   <div className="col-md-12">
-                    {errMsg && <p className="text-danger">{errMsg}</p>}
+                    {store.errMsg && <p className="text-danger">{store.errMsg}</p>}
                   </div>
                   {fields.map((el, i) => Element[el.comp]({ ...el.data, index: i }))}
                   <div className="col-md-12">
                     <button
                       onClick={handleLogin}
                       className="btn btn--md btn--round float-right"
-                      disabled={loading}
+                      disabled={store.loading}
                       type="submit">
-                      {loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+                      {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
                       Login Sekarang
                     </button>
                   </div>

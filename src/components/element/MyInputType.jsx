@@ -29,7 +29,9 @@ export default function MyInputType(props) {
 
   return (
     <div className={`form-group ${errMsg ? 'needs-validated' : isChange ? 'was-validated' : ''} `}>
-      <label htmlFor="user_name">{title}</label>
+      <label htmlFor="user_name">
+        {title} {('Hello', type === 'password' ? true : false)}
+      </label>
       <Input
         id={id || name}
         type={type || 'text'}
@@ -37,6 +39,7 @@ export default function MyInputType(props) {
         value={value || ''}
         className={`form-control ${errMsg ? 'is-invalid' : isChange ? 'is-valid' : ''}`}
         placeholder={title}
+        autoComplete={type === 'password' ? 'true' : 'false'}
       />
       {errMsg && <div className="invalid-feedback d-block">{errMsg}!</div>}
     </div>

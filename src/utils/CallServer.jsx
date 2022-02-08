@@ -12,8 +12,8 @@ const defaultHeaders = (isFormData) => {
 };
 
 const instanceAxios = axios.create({
-  baseURL: '/api/v1',
-  // baseURL: 'http://localhost:3000/api/v1',
+  // baseURL: '/api/v1',
+  baseURL: 'http://localhost:3000/api/v1',
   headers: defaultHeaders(),
   timeout: 180000, // 3 Menit,
   // withCredentials: false,

@@ -1,8 +1,13 @@
+// import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const $ = window.$;
-export default function MainMenu() {
+function MainMenu(props) {
+  const navigate = useNavigate();
+  const { store } = props;
+
   useEffect(() => {
     $('.close_menu').on('click', function () {
       $(this).parent('.offcanvas-menu').addClass('closed');
@@ -12,12 +17,25 @@ export default function MainMenu() {
     });
   }, []);
 
-  const getUserName = () => 'Pengunjung';
-  const isLogedIn = false;
+  const isLogedIn = store.userLogin.isLogin;
+  const getUserName = () => {
+    const { user } = store.userLogin || {};
+    if (user) return user.full_name;
+    else return 'Pengunjung';
+  };
+
+  const handleLogout = async () => {
+    try {
+      await store.handleLogot();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error Logout', error);
+    }
+  };
+
   const handleClickMenu = () => {
     $('.close_menu').click();
   };
-  const handleLogout = () => alert('Logout');
 
   return (
     <div className="menu-area menu--style1">
@@ -38,8 +56,6 @@ export default function MainMenu() {
                 </Link>
               </div>
             </div>
-            {/* end /.col-md-3 */}
-            {/* start .col-md-5 */}
             <div className="col-lg-8 offset-lg-1 col-md-9 col-6 v_middle">
               {/* start .author-area */}
               <div className="author-area">
@@ -60,103 +76,37 @@ export default function MainMenu() {
                 <span
                   className="menu_icon bg-transparent align-self-center p-0"
                   style={{ lineHeight: 'unset' }}>
-                  {getUserName() === 'Pengunjung' ? (
-                    <img
-                      className="rounded"
-                      height="48"
-                      src={`${process.env.PUBLIC_URL}/assets/images/usr_avatar.png`}
-                      alt="user avatar"
-                    />
-                  ) : (
-                    <img
-                      className="rounded"
-                      height="48"
-                      src={`https://ui-avatars.com/api/?background=random&name=${getUserName()}`}
-                      alt="user avatar"
-                    />
-                  )}
+                  <img
+                    className="rounded"
+                    height="48"
+                    src={`https://ui-avatars.com/api/?background=random&name=${getUserName()}`}
+                    alt="user avatar"
+                  />
                 </span>
                 {/* offcanvas menu */}
                 <div className="offcanvas-menu closed">
                   <span className="lnr lnr-cross close_menu" />
                   <div className="author-author__info">
                     <div className="author__avatar v_middle">
-                      {getUserName() === 'Pengunjung' ? (
-                        <img
-                          className="rounded"
-                          height="48"
-                          src={`${process.env.PUBLIC_URL}/assets/images/usr_avatar.png`}
-                          alt="user avatar"
-                        />
-                      ) : (
-                        <img
-                          className="rounded"
-                          height="48"
-                          src={`https://ui-avatars.com/api/?background=random&name=${getUserName()}`}
-                          alt="user avatar"
-                        />
-                      )}
+                      <img
+                        className="rounded"
+                        height="48"
+                        src={`https://ui-avatars.com/api/?background=random&name=${getUserName()}`}
+                        alt="user avatar"
+                      />
                     </div>
                     <div className="autor__info v_middle">
                       <p className="name">{getUserName()}</p>
                       {/* <p className="ammount">$20.45</p> */}
                     </div>
                   </div>
-                  {/*end /.author-author__info*/}
-                  {/* <div className="author__notification_area">
-                  <ul>
-                    <li>
-                      <Link to="notification.html">
-                        <div className="icon_wrap">
-                          <span className="lnr lnr-alarm" />
-                          <span className="notification_count noti">25</span>
-                        </div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="message.html">
-                        <div className="icon_wrap">
-                          <span className="lnr lnr-envelope" />
-                          <span className="notification_count msg">6</span>
-                        </div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="cart.html">
-                        <div className="icon_wrap">
-                          <span className="lnr lnr-cart" />
-                          <span className="notification_count purch">2</span>
-                        </div>
-                      </Link>
-                    </li>
-                  </ul>
-                </div> */}
-                  {/*start .author__notification_area */}
                   <div className="dropdowns dropdown--author">
                     {isLogedIn ? (
                       <ul>
                         <li>
-                          <Link to="/account?tab=purchase" onClick={handleClickMenu}>
-                            <span className="lnr lnr-cart" />
-                            Pesanan
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/account?tab=policy" onClick={handleClickMenu}>
-                            <span className="lnr lnr-license" />
-                            Polis
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/account?tab=claim" onClick={handleClickMenu}>
-                            <span className="lnr lnr-briefcase" />
-                            Klaim
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/account?tab=profile" onClick={handleClickMenu}>
+                          <Link to="/admin" onClick={handleClickMenu}>
                             <span className="lnr lnr-user" />
-                            Profil
+                            Admin
                           </Link>
                         </li>
                         <li>
@@ -172,12 +122,6 @@ export default function MainMenu() {
                           <Link to="/login" onClick={handleClickMenu}>
                             <span className="lnr lnr-lock" />
                             Login
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/register" onClick={handleClickMenu}>
-                            <span className="lnr lnr-user" />
-                            Register
                           </Link>
                         </li>
                       </ul>
@@ -198,14 +142,12 @@ export default function MainMenu() {
                   </div>
                 </div>
               </div>
-              {/* end /.mobile_content */}
             </div>
-            {/* end /.col-md-5 */}
           </div>
-          {/* end /.row */}
         </div>
-        {/* end /.container */}
       </div>
     </div>
   );
 }
+
+export default observer(MainMenu);

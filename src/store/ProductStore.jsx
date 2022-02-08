@@ -13,13 +13,12 @@ class ProductStore {
       loading: observable,
       finished: observable,
       actionSetLoading: action,
-      // addProduct: action,
       actionSetFinish: action,
       loadData: action,
       actionSetProduct: action,
     });
-    // autorun(this.logStoreDetails());
-    runInAction(this.prefetchData());
+    autorun(this.prefetchData());
+    // runInAction(this.prefetchData());
   }
 
   actionSetLoading(val) {
@@ -80,6 +79,7 @@ class ProductStore {
 
   async loadData(page) {
     try {
+      // TODO: Only Load in component product
       this.actionSetLoading(true);
       const url = `${ServerApi.URL_PRODUCT}?last_id=${page}`;
       const { response } = await CallServer({ method: 'get', url });

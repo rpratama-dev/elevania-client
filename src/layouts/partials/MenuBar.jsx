@@ -1,18 +1,25 @@
+// import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { Link, useNavigate } from 'react-router-dom';
-import MyStorage from '../../utils/MyStorage';
 
-export default function MenuBar() {
+function MenuBar(props) {
+  const { store } = props;
   const navigate = useNavigate();
 
-  const isLogedIn = MyStorage.getAccessToken() ? true : false;
+  const isLogedIn = store.userLogin.isLogin;
   const getUserName = () => {
-    const user = MyStorage.getUser();
+    const { user } = store.userLogin;
     if (user) return user.full_name;
     else return 'Pengunjung';
   };
-  const handleLogout = () => {
-    MyStorage.clear();
-    navigate('/login');
+
+  const handleLogout = async () => {
+    try {
+      await store.handleLogot();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error Logout', error);
+    }
   };
 
   return (
@@ -139,3 +146,5 @@ export default function MenuBar() {
     </div>
   );
 }
+
+export default observer(MenuBar);
