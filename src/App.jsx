@@ -20,7 +20,7 @@ function App() {
       <MainLayout store={userStore} />
       <Routes>
         <Route path="login" element={<Login store={userStore} />} />
-        <Route path="admin" element={<AdmDashboard />}>
+        <Route path="admin" element={<AdmDashboard store={productStore} />}>
           <Route index element={<AdmManageProduct store={productStore} />} />
           <Route path="product" element={<AdmManageProduct store={productStore} />} />
           <Route path="product/sync" element={<AdmSyncProduct store={syncStore} />} />

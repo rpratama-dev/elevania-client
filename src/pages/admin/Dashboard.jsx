@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-function Dashboard() {
-  const [page, setPage] = useState('manage_item');
+function Dashboard({ store }) {
+  const { pageDashboard } = store;
 
   useEffect(() => {
     const { pathname } = window.location;
-    if (pathname.split('/').includes('sync')) setPage('import_item');
-    else setPage('manage_item');
+    if (pathname.split('/').includes('sync')) store.setMyState('pageDashboard', 'import_item');
+    else store.setMyState('pageDashboard', 'manage_item');
   }, []);
 
-  const handlePage = (p) => setPage(p);
+  const handlePage = (p) => store.setMyState('pageDashboard', p);
 
   return (
     <div className="dashboard-area">
@@ -20,13 +21,13 @@ function Dashboard() {
           <div className="row">
             <div className="col-md-12">
               <ul className="dashboard_menu">
-                <li className={page === 'manage_item' ? 'active' : ''}>
+                <li className={pageDashboard === 'manage_item' ? 'active' : ''}>
                   <Link onClick={() => handlePage('manage_item')} to="/admin/product">
                     <span className="lnr lnr-briefcase" />
                     Manage Item
                   </Link>
                 </li>
-                <li className={page === 'import_item' ? 'active' : ''}>
+                <li className={pageDashboard === 'import_item' ? 'active' : ''}>
                   <Link onClick={() => handlePage('import_item')} to="/admin/product/sync">
                     <span className="lnr lnr-download" />
                     Impor Item
@@ -48,4 +49,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default observer(Dashboard);

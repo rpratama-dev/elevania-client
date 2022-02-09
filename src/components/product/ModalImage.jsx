@@ -1,20 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Button, Modal } from 'react-bootstrap';
-import parseEditorHtml from '../../helper/parseEditorHtml';
-import CallServer from '../../utils/CallServer';
-import ServerApi from '../../utils/ServerApi';
-import Element from '../element';
-import MyComp from '../MyComp';
 import CardImage from './CardImage';
-
-const init = {
-  name: '',
-  sku: '',
-  price: '',
-  description: '',
-  // image_url: '',
-};
 
 /**
  *
@@ -43,126 +30,9 @@ const init = {
  * }} props
  * @returns
  */
-export default function ModalImage(props) {
-  const { show, handleClose, title, product } = props;
-  const [payload, setPayload] = useState({ ...init });
-  const [errMsg, setErrMsg] = useState({ ...init });
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (product) {
-      const { id, prod_no, name, sku, price, description } = product;
-      const newPyd = { id, prod_no, name, sku, price };
-      setPayload(newPyd);
-      setTimeout(() => {
-        setPayload({ ...newPyd, description });
-      }, 1000);
-    }
-  }, []);
-
-  const handleCheckSKU = async (sku) => {
-    let msg = '';
-    try {
-      const url = `${ServerApi.URL_PRODUCT}/${sku}/sku`;
-      const { response } = await CallServer({ method: 'get', url });
-      if (response.id) msg = 'SKU Sudah Terdaftar';
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setErrMsg({ ...errMsg, sku: msg });
-    }
-  };
-
-  const validation = (field, value) => {
-    switch (field) {
-      case 'name': {
-        if (!value) return 'Nama produk wajin diisi';
-        break;
-      }
-      case 'sku': {
-        if (!value) return 'SKU Wajib disertakan';
-        handleCheckSKU(value);
-        break;
-      }
-      case 'price': {
-        if (!value) return 'Harga produk wajib diisi';
-        else if (Number.isNaN(+value)) return 'Harga tidak valid';
-        break;
-      }
-      case 'description':
-        break;
-      default:
-        break;
-    }
-    return '';
-  };
-
-  const validate = () => {
-    const keys = ['name', 'sku', 'price'];
-    if (payload.sku) keys.splice(1, 1);
-    const newErrMsg = { ...errMsg };
-    let isValid = true;
-    keys.forEach((el, i) => {
-      const msg = validation(el, payload[el]);
-      if (msg) isValid = false;
-      newErrMsg[el] = msg;
-    });
-    if (errMsg.sku) isValid = false;
-    setErrMsg(newErrMsg);
-    return isValid;
-  };
-
-  const handleTextEditor = (content, name) => {
-    let temp = content;
-    if (parseEditorHtml(content)) {
-      temp = '';
-    }
-    return temp;
-  };
-
-  const handleChange = (value, name) => {
-    switch (name) {
-      case 'sku':
-        if (value) value = value.toUpperCase();
-        break;
-      case 'description':
-        value = handleTextEditor(value);
-        break;
-      default:
-        break;
-    }
-    const msg = validation(name, value);
-    setErrMsg({ ...errMsg, [name]: msg });
-    setPayload({ ...payload, [name]: value });
-  };
-
-  const fields = MyComp.product(payload, errMsg, handleChange);
-
-  const handleConfirm = async () => {
-    try {
-      setLoading(true);
-      const tempUrl = ServerApi.URL_PRODUCT;
-      const url = product ? `${tempUrl}/${product.prod_no}` : tempUrl;
-      const method = product ? 'put' : 'post';
-      const { response, message } = await CallServer({ method, url, data: payload });
-      if (message) alert(message);
-      handleClose();
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = () => {
-    const isValid = validate();
-    if (isValid) {
-      const isConfirm = confirm('Simpan Perubahan?');
-      if (isConfirm) handleConfirm();
-    } else alert('Periksa kembali data yang kamu input');
-  };
+function ModalImage(props) {
+  const { show, handleClose, title, product, store } = props;
+  const { currentImages } = store.myState;
 
   return (
     <>
@@ -193,7 +63,7 @@ export default function ModalImage(props) {
               </div>
             </div>
             <div className="row">
-              {product.images.map((el, i) => (
+              {currentImages.map((el, i) => (
                 <div key={i} className="col-lg-3 col-md-4">
                   <CardImage image={el} />
                 </div>
@@ -209,15 +79,15 @@ export default function ModalImage(props) {
             variant="secondary"
             className="btn btn--round modal_close"
             onClick={handleClose}
-            disabled={loading}>
+            disabled={false}>
             Close
           </Button>
           <Button
-            onClick={handleSubmit}
+            onClick={console.log}
             variant="primary"
             className="btn btn--round btn--sm"
-            disabled={loading}>
-            {loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+            disabled={false}>
+            {false && <i className="fas fa-spinner fa-spin mr-2"></i>}
             Submit
           </Button>
         </Modal.Footer>
@@ -225,3 +95,5 @@ export default function ModalImage(props) {
     </>
   );
 }
+
+export default observer(ModalImage);

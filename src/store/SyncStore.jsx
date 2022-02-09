@@ -73,13 +73,11 @@ class SyncStore {
 
   async loadProduct() {
     try {
-      console.log('load product');
       this.setSyncState('loading', true);
       const url = `${ServerApi.URL_PRODUCT}/sync?pageNumber=${this.syncState.page}`;
       const { response } = await CallServer({ method: 'get', url });
       const temps = [...this.syncState.products, ...response.slice(0)];
 
-      console.log('load product', temps);
       const selfs = temps.map((el) => el.sku);
       if (temps.length > 0) {
         const newProducts = temps.filter((value, index) => {

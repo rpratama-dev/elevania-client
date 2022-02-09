@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import parseEditorHtml from '../../helper/parseEditorHtml';
 import CallServer from '../../utils/CallServer';
@@ -42,10 +43,9 @@ const init = {
  * }} props
  * @returns
  */
-export default function ModalFormProduct(props) {
+function ModalFormProduct(props) {
   const { show, handleClose, title, product, store } = props;
-  const [payload, setPayload] = useState({ ...init });
-  const [errMsg, setErrMsg] = useState({ ...init });
+  const { payload, errMsg } = store.myState;
 
   useEffect(() => {
     if (product) {
@@ -53,11 +53,12 @@ export default function ModalFormProduct(props) {
       const parseing = {};
       const newPyd = { id, prod_no, name, sku, price };
       Object.keys(newPyd).forEach((el) => {
-        parseing[el] = unescape(product[el]);
+        parseing[el] = product[el];
       });
-      setPayload(parseing);
+      console.log('parseing', parseing);
+      store.setMyState('payload', parseing);
       setTimeout(() => {
-        setPayload({ ...parseing, description: unescape(description) });
+        store.setMyState('payload', { ...parseing, description: description });
       }, 1000);
     }
   }, []);
@@ -75,7 +76,7 @@ export default function ModalFormProduct(props) {
     } catch (error) {
       console.error(error);
     } finally {
-      setErrMsg({ ...errMsg, sku: msg });
+      store.setMyState('errMsg', { ...errMsg, sku: msg });
     }
   };
 
@@ -114,15 +115,13 @@ export default function ModalFormProduct(props) {
       newErrMsg[el] = msg;
     });
     if (errMsg.sku) isValid = false;
-    setErrMsg(newErrMsg);
+    store.setMyState('errMsg', newErrMsg);
     return isValid;
   };
 
   const handleTextEditor = (content, name) => {
     let temp = content;
-    if (parseEditorHtml(content)) {
-      temp = '';
-    }
+    if (parseEditorHtml(content)) temp = '';
     return temp;
   };
 
@@ -138,8 +137,8 @@ export default function ModalFormProduct(props) {
         break;
     }
     const msg = validation(name, value);
-    setErrMsg({ ...errMsg, [name]: msg });
-    setPayload({ ...payload, [name]: value });
+    store.setMyState('errMsg', { ...errMsg, [name]: msg });
+    store.setMyState('payload', { ...payload, [name]: value });
   };
 
   const fields = MyComp.product(payload, errMsg, handleChange);
@@ -156,6 +155,7 @@ export default function ModalFormProduct(props) {
   };
 
   const handleSubmit = () => {
+    console.log('validation');
     const isValid = validate();
     if (isValid) {
       const isConfirm = confirm('Simpan Perubahan?');
@@ -178,7 +178,7 @@ export default function ModalFormProduct(props) {
           <h3 className="modal-title mb-0" id="rating_modal">
             {title}
           </h3>
-          <h6>{product && unescape(product.name)}</h6>
+          <h6>{product && product.name}</h6>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
@@ -209,3 +209,5 @@ export default function ModalFormProduct(props) {
     </>
   );
 }
+
+export default observer(ModalFormProduct);

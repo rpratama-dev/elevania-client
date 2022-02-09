@@ -4,10 +4,6 @@ import Element from '../../components/element';
 import MyComp from '../../components/MyComp';
 
 function Login({ store }) {
-  // const [payload, setPayload] = useState({ email: '', password: '' });
-  // const [errMsg, setErrMsg] = useState('');
-  // const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   /**

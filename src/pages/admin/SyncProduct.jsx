@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyCheckbox from '../../components/element/MyCheckbox';
 import { formatNumber } from '../../helper/formatNumber';

@@ -1,5 +1,4 @@
 import { Input } from 'antd';
-import { useState } from 'react';
 
 /**
  *
@@ -15,7 +14,7 @@ import { useState } from 'react';
  */
 export default function MyInputType(props) {
   const { title, type, name, id, value, errMsg, handleChange } = props;
-  const [isChange, setIsChange] = useState(false);
+  let isChange = false;
   /**
    *
    * @param {{
@@ -24,7 +23,7 @@ export default function MyInputType(props) {
    */
   const onChange = (e) => {
     handleChange(e.target.value, name);
-    setIsChange(true);
+    isChange = true;
   };
 
   return (
