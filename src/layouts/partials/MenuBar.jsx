@@ -9,7 +9,7 @@ function MenuBar(props) {
   const isLogedIn = store.userLogin.isLogin;
   const getUserName = () => {
     const { user } = store.userLogin;
-    if (user) return user.full_name;
+    if (user && isLogedIn) return user.full_name;
     else return 'Pengunjung';
   };
 
