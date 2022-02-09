@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import CustomLink from '../../routes/CustomeLink';
 
 function Dashboard({ productStore }) {
   const { pageDashboard } = productStore;
@@ -22,16 +23,16 @@ function Dashboard({ productStore }) {
             <div className="col-md-12">
               <ul className="dashboard_menu">
                 <li className={pageDashboard === 'manage_item' ? 'active' : ''}>
-                  <Link onClick={() => handlePage('manage_item')} to="/admin/product">
+                  <CustomLink onClick={() => handlePage('manage_item')} to="/admin/product">
                     <span className="lnr lnr-briefcase" />
                     Manage Item
-                  </Link>
+                  </CustomLink>
                 </li>
                 <li className={pageDashboard === 'import_item' ? 'active' : ''}>
-                  <Link onClick={() => handlePage('import_item')} to="/admin/product/sync">
+                  <CustomLink onClick={() => handlePage('import_item')} to="/admin/product/sync">
                     <span className="lnr lnr-download" />
                     Impor Item
-                  </Link>
+                  </CustomLink>
                 </li>
               </ul>
               {/* end /.dashboard_menu */}
