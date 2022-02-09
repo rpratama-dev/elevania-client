@@ -92,12 +92,9 @@ class UserStore {
         });
         MyStorage.setUser(response);
         this.setUserLogin({ user: response });
-        console.log('setUserLogin', response);
+        this.setErrMsg('');
       } catch (error) {
-        const msg = errorHandler(error);
-        if (typeof msg === 'string') {
-          this.setErrMsg(msg);
-        } else console.log('Login Error', error);
+        console.log('Login Error', error);
       } finally {
         this.setLoading(false);
       }
@@ -135,6 +132,7 @@ class UserStore {
           MyStorage.setUser(response.user);
           resolve(response);
           this.setUserLogin(response);
+          this.setErrMsg('');
         } catch (error) {
           const msg = errorHandler(error);
           if (typeof msg === 'string') {

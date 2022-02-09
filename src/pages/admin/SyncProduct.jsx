@@ -1,107 +1,36 @@
 /* eslint-disable no-unused-vars */
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyCheckbox from '../../components/element/MyCheckbox';
 import { formatNumber } from '../../helper/formatNumber';
-import CallServer from '../../utils/CallServer';
-import errorHandler from '../../utils/errorHandler';
-import ServerApi from '../../utils/ServerApi';
 
-export default function SyncProduct() {
-  const [finished, setFinished] = useState(false);
-  const [page, setPage] = useState(1);
-  const [products, setProducts] = useState([]);
-  const [importeds, setImporteds] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(true);
+function SyncProduct({ store }) {
+  const { loading, page, finished, handleChange } = store.syncState;
+  const { selectedIds, importeds, products } = store.syncState;
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadImported();
-    return () => {
-      setIsLoaded(false);
-    };
+    store.loadProduct();
+    store.loadImported();
   }, []);
 
-  useEffect(() => {
-    const bodyTable = document.getElementById('tb-product');
+  const bodyTable = document.getElementById('tb-product');
+  if (bodyTable)
     bodyTable.onscroll = () => {
       if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
-        setPage(page + 1);
+        store.setSyncState('page', page + 1);
+        if (!finished && !loading) store.loadProduct();
       }
     };
-  }, [products]);
 
-  useEffect(() => {
-    if (!finished && !loading) loadData();
-  }, [page]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const url = `${ServerApi.URL_PRODUCT}/sync?pageNumber=${page}`;
-      const { response } = await CallServer({ method: 'get', url });
-      const temps = [...products, ...response.slice(0)];
-      const selfs = temps.map((el) => el.sku);
-      if (temps.length > 0) {
-        const newProducts = temps.filter((value, index) => {
-          return selfs.indexOf(value.sku) === index;
-        });
-        if (isLoaded) setProducts(newProducts);
-      }
-      if (response.length < 1) setFinished(true);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      if (isLoaded) setLoading(false);
-    }
-  };
-
-  const loadImported = async () => {
-    try {
-      const url = `${ServerApi.URL_PRODUCT}/sync/imported`;
-      const { response } = await CallServer({ method: 'get', url });
-      setImporteds(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  /**
-   *
-   * @param {string} value
-   * @param {string} name
-   * @param {boolean} checked
-   */
-  const handleChange = (value, _, checked) => {
-    const isImported = importeds.indexOf(value);
-    if (isImported > -1) return;
-
-    const newIDs = [...selectedIds];
-    const index = newIDs.indexOf(value);
-    console.log(index, checked);
-    if (index > -1) newIDs.splice(index, 1);
-    if (index < 0) newIDs.push(value);
-    console.log(newIDs);
-    setSelectedIds(newIDs);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const url = `${ServerApi.URL_PRODUCT}/sync`;
-      const data = { selectedProducts: selectedIds };
-      const { message } = await CallServer({ method: 'post', url, data });
+  const handleSubmit = () => {
+    store.handleSubmit((response) => {
+      const { message } = response;
       alert(message);
       navigate('/admin/product');
-    } catch (error) {
-      const msg = errorHandler(error);
-      if (typeof msg === 'string') alert(msg);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleImport = () => {
@@ -190,3 +119,5 @@ export default function SyncProduct() {
     </section>
   );
 }
+
+export default observer(SyncProduct);

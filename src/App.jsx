@@ -6,12 +6,14 @@ import { AdmDashboard, AdmManageProduct, AdmSyncProduct, Login } from './pages';
 import { ProductDashboard } from './pages';
 import ProductStore from './store/ProductStore';
 import UserStore from './store/UserStore';
+import SyncStore from './store/SyncStore';
 
 function App() {
   // const authSstore = new AuthStore();
 
   const productStore = new ProductStore();
   const userStore = new UserStore();
+  const syncStore = new SyncStore();
 
   return (
     <>
@@ -21,7 +23,7 @@ function App() {
         <Route path="admin" element={<AdmDashboard />}>
           <Route index element={<AdmManageProduct store={productStore} />} />
           <Route path="product" element={<AdmManageProduct store={productStore} />} />
-          <Route path="product/sync" element={<AdmSyncProduct />} />
+          <Route path="product/sync" element={<AdmSyncProduct store={syncStore} />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
         <Route index element={<ProductDashboard store={productStore} />} />
