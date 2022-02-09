@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import CardProduct from '../../components/product/CardProduct';
@@ -15,22 +14,22 @@ import ModalFormProduct from '../../components/product/ModalFormProduct';
  * @returns
  */
 function ManageProduct(props) {
-  const { config = {}, store } = props;
-  const { show, products } = store.myState;
+  const { config = {}, productStore } = props;
+  const { show, products } = productStore.myState;
 
   useEffect(() => {
-    store.fetchData();
+    productStore.fetchData();
   }, []);
 
-  const handleShow = () => store.setMyState('show', true);
-  const handleClose = () => store.setMyState('show', false);
+  const handleShow = () => productStore.setMyState('show', true);
+  const handleClose = () => productStore.setMyState('show', false);
 
   const bodyTable = document.getElementById('data-prd');
   if (bodyTable)
     bodyTable.onscroll = function onscroll() {
       if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
         const las_prd = products.slice(-1)[0];
-        store.fetchData(las_prd.id);
+        productStore.fetchData(las_prd.id);
       }
     };
 

@@ -1,4 +1,4 @@
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import CallServer from '../utils/CallServer';
 import errorHandler from '../utils/errorHandler';
 import ServerApi from '../utils/ServerApi';
@@ -20,17 +20,11 @@ class SyncStore {
       setSyncState: action,
       products: computed,
     });
-    runInAction(this.onRun());
+    // runInAction(this.onRun());
   }
 
   get products() {
     return this.syncState.products;
-  }
-
-  onRun() {
-    return () => {
-      console.log('This auto run');
-    };
   }
 
   /**
@@ -45,12 +39,11 @@ class SyncStore {
     else this.syncState[key] = value;
   }
 
-  handleChange(value, _, checked) {
+  handleChange(value) {
     const isImported = this.syncState.importeds.indexOf(value);
     if (isImported > -1) return;
     const newIDs = [...this.syncState.selectedIds];
     const index = newIDs.indexOf(value);
-    console.log(index, checked);
     if (index > -1) newIDs.splice(index, 1);
     if (index < 0) newIDs.push(value);
     this.setSyncState('selectedIds', newIDs);
@@ -87,7 +80,7 @@ class SyncStore {
       }
       if (response.length < 1) this.setSyncState('finished', true);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       this.setSyncState('loading', false);
     }

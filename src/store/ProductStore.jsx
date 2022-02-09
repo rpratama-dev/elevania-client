@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { action, computed, makeObservable, observable, autorun, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import checkImageURL from '../helper/checkImageURL';
 import CallServer from '../utils/CallServer';
 import ServerApi from '../utils/ServerApi';
@@ -49,7 +48,6 @@ class ProductStore {
   }
 
   async setCurrentImages(images) {
-    console.log('images', images);
     const newImages = await Promise.all(
       images.map(async (el) => {
         const newUrl = await checkImageURL(el.image_url);

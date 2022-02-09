@@ -1,5 +1,5 @@
 export default function errorHandler(error) {
-  console.log('error', error.response);
+  console.error('error', error.response);
   if (error.response) {
     const data = error.response.data;
     if (data) return data.message;

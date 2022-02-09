@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/role-supports-aria-props */
-
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -36,15 +33,15 @@ import ModalImage from './ModalImage';
  * @returns
  */
 function CardProduct(props) {
-  const { product, config = {}, store } = props;
-  const { modalCard } = store.myState;
+  const { product, config = {}, productStore } = props;
+  const { modalCard } = productStore.myState;
 
   const handleShow = (key) =>
-    store.setMyState('modalCard', { ...modalCard, [key]: `id_${product.id}` });
-  const handleClose = () => store.setMyState('modalCard', { product: false, image: false });
+    productStore.setMyState('modalCard', { ...modalCard, [key]: `id_${product.id}` });
+  const handleClose = () => productStore.setMyState('modalCard', { product: false, image: false });
 
   useEffect(() => {
-    // store.setImageUrlProduct(product.image_url, product.id);
+    // productStore.setImageUrlProduct(product.image_url, product.id);
   }, []);
 
   const handleEdit = () => {
@@ -53,11 +50,11 @@ function CardProduct(props) {
 
   const handleEditImage = () => {
     handleShow('image');
-    store.setCurrentImages(product.images);
+    productStore.setCurrentImages(product.images);
   };
 
   const handleConfirm = async () => {
-    store.deleteProduct(product.prod_no, (msg) => {
+    productStore.deleteProduct(product.prod_no, (msg) => {
       if (msg) alert(msg);
     });
   };
@@ -91,13 +88,7 @@ function CardProduct(props) {
           <img src={product.image_url} height="300" alt="Product Images" />
           {!config.isCustomer && (
             <div className="prod_option">
-              <a
-                href="#test"
-                id="drop2"
-                className="dropdown-trigger"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true">
+              <a href="#test" id="drop2" className="dropdown-trigger" data-toggle="dropdown">
                 <span className="lnr lnr-cog setting-icon" />
               </a>
               <div className="options dropdown-menu" aria-labelledby="drop2">

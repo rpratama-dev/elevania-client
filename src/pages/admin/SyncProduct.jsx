@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyCheckbox from '../../components/element/MyCheckbox';
 import { formatNumber } from '../../helper/formatNumber';
 
-function SyncProduct({ store }) {
-  const { loading, page, finished, handleChange } = store.syncState;
+function SyncProduct(props) {
+  const { syncStore: store } = props;
+  const { loading, page, finished } = store.syncState;
   const { selectedIds, importeds, products } = store.syncState;
 
   const navigate = useNavigate();
@@ -24,6 +24,10 @@ function SyncProduct({ store }) {
         if (!finished && !loading) store.loadProduct();
       }
     };
+
+  const handleChange = (value, _, checked) => {
+    store.handleChange(value, _, checked);
+  };
 
   const handleSubmit = () => {
     store.handleSubmit((response) => {

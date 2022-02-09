@@ -6,7 +6,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 const $ = window.$;
 function MainMenu(props) {
   const navigate = useNavigate();
-  const { store } = props;
+  const { userStore } = props;
 
   useEffect(() => {
     $('.close_menu').on('click', function () {
@@ -17,16 +17,16 @@ function MainMenu(props) {
     });
   }, []);
 
-  const isLogedIn = store.userLogin.isLogin;
+  const isLogedIn = userStore.userLogin.isLogin;
   const getUserName = () => {
-    const { user } = store.userLogin;
+    const { user } = userStore.userLogin;
     if (user && isLogedIn) return user.full_name;
     else return 'Pengunjung';
   };
 
   const handleLogout = async () => {
     try {
-      await store.handleLogot();
+      await userStore.handleLogot();
       navigate('/login');
     } catch (error) {
       console.error('Error Logout', error);

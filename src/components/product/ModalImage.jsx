@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
 import { Button, Modal } from 'react-bootstrap';
 import CardImage from './CardImage';
@@ -31,8 +30,8 @@ import CardImage from './CardImage';
  * @returns
  */
 function ModalImage(props) {
-  const { show, handleClose, title, product, store } = props;
-  const { currentImages } = store.myState;
+  const { show, handleClose, title, product, productStore } = props;
+  const { currentImages } = productStore.myState;
 
   return (
     <>

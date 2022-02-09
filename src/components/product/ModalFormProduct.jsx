@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
@@ -7,14 +6,6 @@ import CallServer from '../../utils/CallServer';
 import ServerApi from '../../utils/ServerApi';
 import Element from '../element';
 import MyComp from '../MyComp';
-
-const init = {
-  name: '',
-  sku: '',
-  price: '',
-  description: '',
-  // image_url: '',
-};
 
 /**
  *
@@ -44,8 +35,8 @@ const init = {
  * @returns
  */
 function ModalFormProduct(props) {
-  const { show, handleClose, title, product, store } = props;
-  const { payload, errMsg } = store.myState;
+  const { show, handleClose, title, product, productStore } = props;
+  const { payload, errMsg } = productStore.myState;
 
   useEffect(() => {
     if (product) {
@@ -55,10 +46,9 @@ function ModalFormProduct(props) {
       Object.keys(newPyd).forEach((el) => {
         parseing[el] = product[el];
       });
-      console.log('parseing', parseing);
-      store.setMyState('payload', parseing);
+      productStore.setMyState('payload', parseing);
       setTimeout(() => {
-        store.setMyState('payload', { ...parseing, description: description });
+        productStore.setMyState('payload', { ...parseing, description: description });
       }, 1000);
     }
   }, []);
@@ -72,11 +62,10 @@ function ModalFormProduct(props) {
         if (product && product.prod_no === response.prod_no) msg = '';
         else msg = 'SKU Sudah Terdaftar';
       }
-      console.log(response);
     } catch (error) {
       console.error(error);
     } finally {
-      store.setMyState('errMsg', { ...errMsg, sku: msg });
+      productStore.setMyState('errMsg', { ...errMsg, sku: msg });
     }
   };
 
@@ -109,17 +98,17 @@ function ModalFormProduct(props) {
     if (payload.sku) keys.splice(1, 1);
     const newErrMsg = { ...errMsg };
     let isValid = true;
-    keys.forEach((el, i) => {
+    keys.forEach((el) => {
       const msg = validation(el, payload[el]);
       if (msg) isValid = false;
       newErrMsg[el] = msg;
     });
     if (errMsg.sku) isValid = false;
-    store.setMyState('errMsg', newErrMsg);
+    productStore.setMyState('errMsg', newErrMsg);
     return isValid;
   };
 
-  const handleTextEditor = (content, name) => {
+  const handleTextEditor = (content) => {
     let temp = content;
     if (parseEditorHtml(content)) temp = '';
     return temp;
@@ -137,8 +126,8 @@ function ModalFormProduct(props) {
         break;
     }
     const msg = validation(name, value);
-    store.setMyState('errMsg', { ...errMsg, [name]: msg });
-    store.setMyState('payload', { ...payload, [name]: value });
+    productStore.setMyState('errMsg', { ...errMsg, [name]: msg });
+    productStore.setMyState('payload', { ...payload, [name]: value });
   };
 
   const fields = MyComp.product(payload, errMsg, handleChange);
@@ -146,7 +135,7 @@ function ModalFormProduct(props) {
   const handleConfirm = async () => {
     const newPayload = { ...payload };
     if (product && product.prod_no) newPayload.prod_no = product.prod_no;
-    store.addProduct(!!product, newPayload, (message) => {
+    productStore.addProduct(!!product, newPayload, (message) => {
       if (message) {
         alert(message);
         handleClose();
@@ -155,7 +144,6 @@ function ModalFormProduct(props) {
   };
 
   const handleSubmit = () => {
-    console.log('validation');
     const isValid = validate();
     if (isValid) {
       const isConfirm = confirm('Simpan Perubahan?');
@@ -193,15 +181,15 @@ function ModalFormProduct(props) {
             variant="secondary"
             className="btn btn--round modal_close"
             onClick={handleClose}
-            disabled={store.loading}>
+            disabled={productStore.loading}>
             Close
           </Button>
           <Button
             onClick={handleSubmit}
             variant="primary"
             className="btn btn--round btn--sm"
-            disabled={store.loading}>
-            {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+            disabled={productStore.loading}>
+            {productStore.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
             Submit
           </Button>
         </Modal.Footer>

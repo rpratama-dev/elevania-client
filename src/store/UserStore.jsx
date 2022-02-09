@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { action, computed, makeObservable, observable, autorun, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import CallServer from '../utils/CallServer';
 import errorHandler from '../utils/errorHandler';
 import MyStorage from '../utils/MyStorage';
@@ -72,16 +71,6 @@ class UserStore {
     }
   }
 
-  logUserLogin() {
-    return () => {
-      console.log('run', this.user);
-    };
-    // return () => {
-    //   if (this.userLogin.user) console.log(`Now, Your login as ${this.user.full_name}`);
-    //   else `Waiting for verification token`;
-    // };
-  }
-
   prefetchUser() {
     return async () => {
       try {
@@ -94,7 +83,7 @@ class UserStore {
         this.setUserLogin({ user: response });
         this.setErrMsg('');
       } catch (error) {
-        console.log('Login Error', error);
+        console.error('Login Error', error);
       } finally {
         this.setLoading(false);
       }
@@ -114,7 +103,7 @@ class UserStore {
           const msg = errorHandler(error);
           if (typeof msg === 'string') {
             this.setErrMsg(msg);
-          } else console.log('Login Error', error);
+          } else console.error('Login Error', error);
           reject(error);
         }
       })();
@@ -137,7 +126,7 @@ class UserStore {
           const msg = errorHandler(error);
           if (typeof msg === 'string') {
             this.setErrMsg(msg);
-          } else console.log('Login Error', error);
+          } else console.error('Login Error', error);
           reject(error);
         } finally {
           this.setLoading(false);

@@ -1,18 +1,18 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-function Dashboard({ store }) {
-  const { pageDashboard } = store;
+function Dashboard({ productStore }) {
+  const { pageDashboard } = productStore;
 
   useEffect(() => {
     const { pathname } = window.location;
-    if (pathname.split('/').includes('sync')) store.setMyState('pageDashboard', 'import_item');
-    else store.setMyState('pageDashboard', 'manage_item');
+    if (pathname.split('/').includes('sync'))
+      productStore.setMyState('pageDashboard', 'import_item');
+    else productStore.setMyState('pageDashboard', 'manage_item');
   }, []);
 
-  const handlePage = (p) => store.setMyState('pageDashboard', p);
+  const handlePage = (p) => productStore.setMyState('pageDashboard', p);
 
   return (
     <div className="dashboard-area">

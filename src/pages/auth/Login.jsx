@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Element from '../../components/element';
 import MyComp from '../../components/MyComp';
 
-function Login({ store }) {
+function Login({ userStore }) {
   const navigate = useNavigate();
 
   /**
@@ -12,16 +12,16 @@ function Login({ store }) {
    * @param {string} name
    */
   const handleChange = (value, name) => {
-    store.setPayload(value, name);
+    userStore.setPayload(value, name);
   };
 
-  const fields = MyComp.login(store.loginPayload, handleChange);
+  const fields = MyComp.login(userStore.loginPayload, handleChange);
 
   const handleLogin = async () => {
     try {
-      await store.handleLogin();
-      if (store.userLogin) {
-        if (store.userLogin.role === 'admin') {
+      await userStore.handleLogin();
+      if (userStore.userLogin) {
+        if (userStore.userLogin.role === 'admin') {
           navigate('/admin');
         } else navigate('/');
       }
@@ -43,16 +43,16 @@ function Login({ store }) {
                 </div>
                 <div className="row login--form">
                   <div className="col-md-12">
-                    {store.errMsg && <p className="text-danger">{store.errMsg}</p>}
+                    {userStore.errMsg && <p className="text-danger">{userStore.errMsg}</p>}
                   </div>
                   {fields.map((el, i) => Element[el.comp]({ ...el.data, index: i }))}
                   <div className="col-md-12">
                     <button
                       onClick={handleLogin}
                       className="btn btn--md btn--round float-right"
-                      disabled={store.loading}
+                      disabled={userStore.loading}
                       type="submit">
-                      {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+                      {userStore.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
                       Login Sekarang
                     </button>
                   </div>
