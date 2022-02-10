@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import checkImageURL from '../../helper/checkImageURL';
-
 /**
  *
  * @param {{
@@ -12,22 +9,11 @@ import checkImageURL from '../../helper/checkImageURL';
  */
 export default function CardImage(props) {
   const { image } = props;
-  const [imgUrl, setImsgUrl] = useState(image.image_url);
-
-  useEffect(() => {
-    checkLogo(image.image_url);
-  }, []);
-
-  const checkLogo = (url) => {
-    checkImageURL(url, (newUrl) => {
-      setImsgUrl(newUrl);
-    });
-  };
 
   return (
     <div className="single_team_member">
       <figure>
-        <img src={imgUrl} alt="Team Member" />
+        <img src={image.image_url} alt="Team Member" />
         <figcaption>
           <div className="name_desig">
             <h4>Tipe</h4>

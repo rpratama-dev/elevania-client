@@ -1,12 +1,7 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/role-supports-aria-props */
-
-import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import checkImageURL from '../../helper/checkImageURL';
 import { formatNumber } from '../../helper/formatNumber';
-import CallServer from '../../utils/CallServer';
-import ServerApi from '../../utils/ServerApi';
 import ModalFormProduct from './ModalFormProduct';
 import ModalImage from './ModalImage';
 
@@ -37,23 +32,17 @@ import ModalImage from './ModalImage';
  * }} props
  * @returns
  */
-export default function CardProduct(props) {
-  const { product, config = {}, store } = props;
-  const [imgUrl, setImsgUrl] = useState(product.image_url);
-  const [show, setShow] = useState({ product: false, image: false });
+function CardProduct(props) {
+  const { product, config = {}, productStore } = props;
+  const { modalCard } = productStore.myState;
 
-  const handleShow = (key) => setShow({ ...show, [key]: true });
-  const handleClose = () => setShow({ product: false, image: false });
+  const handleShow = (key) =>
+    productStore.setMyState('modalCard', { ...modalCard, [key]: `id_${product.id}` });
+  const handleClose = () => productStore.setMyState('modalCard', { product: false, image: false });
 
   useEffect(() => {
-    checkLogo(product.image_url);
+    // productStore.setImageUrlProduct(product.image_url, product.id);
   }, []);
-
-  const checkLogo = (url) => {
-    checkImageURL(url, (newUrl, isValid) => {
-      setImsgUrl(newUrl);
-    });
-  };
 
   const handleEdit = () => {
     handleShow('product');
@@ -61,10 +50,11 @@ export default function CardProduct(props) {
 
   const handleEditImage = () => {
     handleShow('image');
+    productStore.setCurrentImages(product.images);
   };
 
   const handleConfirm = async () => {
-    store.deleteProduct(product.prod_no, (msg) => {
+    productStore.deleteProduct(product.prod_no, (msg) => {
       if (msg) alert(msg);
     });
   };
@@ -76,35 +66,29 @@ export default function CardProduct(props) {
 
   return (
     <>
-      {show.product && (
+      {modalCard.product === `id_${product.id}` && (
         <ModalFormProduct
-          show={show.product}
+          show={!!modalCard.product}
           handleClose={handleClose}
           title="Edit Produk"
           product={product}
           {...props}
         />
       )}
-      {show.image && (
+      {modalCard.image === `id_${product.id}` && (
         <ModalImage
-          show={show.image}
+          show={!!modalCard.image}
           handleClose={handleClose}
           title="Edit Image"
-          product={product}
+          {...props}
         />
       )}
       <div className="product product--card">
         <div className="product__thumbnail">
-          <img src={imgUrl} height="300" alt="Product Images" />
+          <img src={product.image_url} height="300" alt="Product Images" />
           {!config.isCustomer && (
             <div className="prod_option">
-              <a
-                href="#test"
-                id="drop2"
-                className="dropdown-trigger"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true">
+              <a href="#test" id="drop2" className="dropdown-trigger" data-toggle="dropdown">
                 <span className="lnr lnr-cog setting-icon" />
               </a>
               <div className="options dropdown-menu" aria-labelledby="drop2">
@@ -134,20 +118,20 @@ export default function CardProduct(props) {
         </div>
         <div className="product-desc">
           <a href="#test" className="product_title">
-            <h6 className="text--title">{unescape(product.name)}</h6>
+            <h6 className="text--title">{product.name}</h6>
           </a>
           <ul className="titlebtm">
             <li className="product_cat">
               <a href="#a">
                 <span className="lnr lnr-book" />
-                {unescape(product.sku)}
+                {product.sku}
               </a>
             </li>
           </ul>
 
           <div
             className="text--overflow"
-            dangerouslySetInnerHTML={{ __html: unescape(product.description) }}
+            dangerouslySetInnerHTML={{ __html: product.description }}
           />
         </div>
         <div className="product-purchase">
@@ -159,3 +143,5 @@ export default function CardProduct(props) {
     </>
   );
 }
+
+export default observer(CardProduct);

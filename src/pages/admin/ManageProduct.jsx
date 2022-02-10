@@ -1,10 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CardProduct from '../../components/product/CardProduct';
 import ModalFormProduct from '../../components/product/ModalFormProduct';
-import CallServer from '../../utils/CallServer';
-import ServerApi from '../../utils/ServerApi';
 
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /**
@@ -17,22 +14,24 @@ import ServerApi from '../../utils/ServerApi';
  * @returns
  */
 function ManageProduct(props) {
-  const { config = {}, store } = props;
-  const { products } = store;
-  const [show, setShow] = useState(false);
-
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const { config = {}, productStore } = props;
+  const { show, products } = productStore.myState;
 
   useEffect(() => {
-    const bodyTable = document.getElementById('data-prd');
+    productStore.fetchData();
+  }, []);
+
+  const handleShow = () => productStore.setMyState('show', true);
+  const handleClose = () => productStore.setMyState('show', false);
+
+  const bodyTable = document.getElementById('data-prd');
+  if (bodyTable)
     bodyTable.onscroll = function onscroll() {
       if (Math.ceil(bodyTable.scrollTop) + bodyTable.clientHeight >= bodyTable.scrollHeight) {
         const las_prd = products.slice(-1)[0];
-        store.fetchData(las_prd.id);
+        productStore.fetchData(las_prd.id);
       }
     };
-  }, [products]);
 
   const handleBtnAdd = () => {
     handleShow();

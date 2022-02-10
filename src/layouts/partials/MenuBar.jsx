@@ -3,19 +3,19 @@ import { observer } from 'mobx-react-lite';
 import { Link, useNavigate } from 'react-router-dom';
 
 function MenuBar(props) {
-  const { store } = props;
+  const { userStore } = props;
   const navigate = useNavigate();
 
-  const isLogedIn = store.userLogin.isLogin;
+  const isLogedIn = userStore.userLogin.isLogin;
   const getUserName = () => {
-    const { user } = store.userLogin;
+    const { user } = userStore.userLogin;
     if (user && isLogedIn) return user.full_name;
     else return 'Pengunjung';
   };
 
   const handleLogout = async () => {
     try {
-      await store.handleLogot();
+      await userStore.handleLogot();
       navigate('/login');
     } catch (error) {
       console.error('Error Logout', error);
@@ -125,13 +125,6 @@ function MenuBar(props) {
                         GROCERIES
                       </Link>
                     </li>
-                    {isLogedIn && (
-                      <li>
-                        <Link className="menu-link" to="/account?tab=policy">
-                          POLIS SAYA
-                        </Link>
-                      </li>
-                    )}
                   </ul>
                 </div>
                 {/* /.navbar-collapse */}

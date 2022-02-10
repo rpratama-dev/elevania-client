@@ -1,19 +1,11 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import parseEditorHtml from '../../helper/parseEditorHtml';
 import CallServer from '../../utils/CallServer';
 import ServerApi from '../../utils/ServerApi';
 import Element from '../element';
 import MyComp from '../MyComp';
-
-const init = {
-  name: '',
-  sku: '',
-  price: '',
-  description: '',
-  // image_url: '',
-};
 
 /**
  *
@@ -42,10 +34,9 @@ const init = {
  * }} props
  * @returns
  */
-export default function ModalFormProduct(props) {
-  const { show, handleClose, title, product, store } = props;
-  const [payload, setPayload] = useState({ ...init });
-  const [errMsg, setErrMsg] = useState({ ...init });
+function ModalFormProduct(props) {
+  const { show, handleClose, title, product, productStore } = props;
+  const { payload, errMsg } = productStore.myState;
 
   useEffect(() => {
     if (product) {
@@ -53,11 +44,11 @@ export default function ModalFormProduct(props) {
       const parseing = {};
       const newPyd = { id, prod_no, name, sku, price };
       Object.keys(newPyd).forEach((el) => {
-        parseing[el] = unescape(product[el]);
+        parseing[el] = product[el];
       });
-      setPayload(parseing);
+      productStore.setMyState('payload', parseing);
       setTimeout(() => {
-        setPayload({ ...parseing, description: unescape(description) });
+        productStore.setMyState('payload', { ...parseing, description: description });
       }, 1000);
     }
   }, []);
@@ -71,11 +62,10 @@ export default function ModalFormProduct(props) {
         if (product && product.prod_no === response.prod_no) msg = '';
         else msg = 'SKU Sudah Terdaftar';
       }
-      console.log(response);
     } catch (error) {
       console.error(error);
     } finally {
-      setErrMsg({ ...errMsg, sku: msg });
+      productStore.setMyState('errMsg', { ...errMsg, sku: msg });
     }
   };
 
@@ -108,21 +98,19 @@ export default function ModalFormProduct(props) {
     if (payload.sku) keys.splice(1, 1);
     const newErrMsg = { ...errMsg };
     let isValid = true;
-    keys.forEach((el, i) => {
+    keys.forEach((el) => {
       const msg = validation(el, payload[el]);
       if (msg) isValid = false;
       newErrMsg[el] = msg;
     });
     if (errMsg.sku) isValid = false;
-    setErrMsg(newErrMsg);
+    productStore.setMyState('errMsg', newErrMsg);
     return isValid;
   };
 
-  const handleTextEditor = (content, name) => {
+  const handleTextEditor = (content) => {
     let temp = content;
-    if (parseEditorHtml(content)) {
-      temp = '';
-    }
+    if (parseEditorHtml(content)) temp = '';
     return temp;
   };
 
@@ -138,8 +126,8 @@ export default function ModalFormProduct(props) {
         break;
     }
     const msg = validation(name, value);
-    setErrMsg({ ...errMsg, [name]: msg });
-    setPayload({ ...payload, [name]: value });
+    productStore.setMyState('errMsg', { ...errMsg, [name]: msg });
+    productStore.setMyState('payload', { ...payload, [name]: value });
   };
 
   const fields = MyComp.product(payload, errMsg, handleChange);
@@ -147,7 +135,7 @@ export default function ModalFormProduct(props) {
   const handleConfirm = async () => {
     const newPayload = { ...payload };
     if (product && product.prod_no) newPayload.prod_no = product.prod_no;
-    store.addProduct(!!product, newPayload, (message) => {
+    productStore.addProduct(!!product, newPayload, (message) => {
       if (message) {
         alert(message);
         handleClose();
@@ -178,7 +166,7 @@ export default function ModalFormProduct(props) {
           <h3 className="modal-title mb-0" id="rating_modal">
             {title}
           </h3>
-          <h6>{product && unescape(product.name)}</h6>
+          <h6>{product && product.name}</h6>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
@@ -193,15 +181,15 @@ export default function ModalFormProduct(props) {
             variant="secondary"
             className="btn btn--round modal_close"
             onClick={handleClose}
-            disabled={store.loading}>
+            disabled={productStore.loading}>
             Close
           </Button>
           <Button
             onClick={handleSubmit}
             variant="primary"
             className="btn btn--round btn--sm"
-            disabled={store.loading}>
-            {store.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
+            disabled={productStore.loading}>
+            {productStore.loading && <i className="fas fa-spinner fa-spin mr-2"></i>}
             Submit
           </Button>
         </Modal.Footer>
@@ -209,3 +197,5 @@ export default function ModalFormProduct(props) {
     </>
   );
 }
+
+export default observer(ModalFormProduct);

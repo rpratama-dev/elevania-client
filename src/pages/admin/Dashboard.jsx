@@ -1,17 +1,19 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import CustomLink from '../../routes/CustomeLink';
 
-function Dashboard() {
-  const [page, setPage] = useState('manage_item');
+function Dashboard({ productStore }) {
+  const { pageDashboard } = productStore;
 
   useEffect(() => {
     const { pathname } = window.location;
-    if (pathname.split('/').includes('sync')) setPage('import_item');
-    else setPage('manage_item');
+    if (pathname.split('/').includes('sync'))
+      productStore.setMyState('pageDashboard', 'import_item');
+    else productStore.setMyState('pageDashboard', 'manage_item');
   }, []);
 
-  const handlePage = (p) => setPage(p);
+  const handlePage = (p) => productStore.setMyState('pageDashboard', p);
 
   return (
     <div className="dashboard-area">
@@ -20,17 +22,17 @@ function Dashboard() {
           <div className="row">
             <div className="col-md-12">
               <ul className="dashboard_menu">
-                <li className={page === 'manage_item' ? 'active' : ''}>
-                  <Link onClick={() => handlePage('manage_item')} to="/admin/product">
+                <li className={pageDashboard === 'manage_item' ? 'active' : ''}>
+                  <CustomLink onClick={() => handlePage('manage_item')} to="/admin/product">
                     <span className="lnr lnr-briefcase" />
                     Manage Item
-                  </Link>
+                  </CustomLink>
                 </li>
-                <li className={page === 'import_item' ? 'active' : ''}>
-                  <Link onClick={() => handlePage('import_item')} to="/admin/product/sync">
+                <li className={pageDashboard === 'import_item' ? 'active' : ''}>
+                  <CustomLink onClick={() => handlePage('import_item')} to="/admin/product/sync">
                     <span className="lnr lnr-download" />
                     Impor Item
-                  </Link>
+                  </CustomLink>
                 </li>
               </ul>
               {/* end /.dashboard_menu */}
@@ -48,4 +50,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default observer(Dashboard);
