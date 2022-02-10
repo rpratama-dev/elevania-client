@@ -44,17 +44,34 @@
 
 ### DATABASE:
   - Sudah Install DB PostgreSQL
-  - Buat Database ```db_ecommerce```
+  - Buat Database ```db_ecommerce``` # Production
+  - Buat Database ```db_ecommerce_test``` # Testing
   - Config Database ```./config/config.js```
+  - Sesuaikan Konfigurasi Berikut ini dengan database yang dibuat
   	```js
-    {
-      username: 'postgres',
-      password: 'root',
-      // use_env_variable: 'DB_URI',
-      database: 'db_ecommerce',
-      host: '127.0.0.1',
-      dialect: 'postgres',
-    }
+    const config = {
+      development: {
+        username: 'postgres',
+        password: 'root',
+        database: 'db_ecommerce',
+        host: '127.0.0.1',
+        dialect: 'postgres',
+      },
+      test: {
+        username: 'postgres',
+        password: 'root',
+        database: 'db_ecommerce_test',
+        host: '127.0.0.1',
+        dialect: 'postgres',
+      },
+      production: {
+        username: 'postgres',
+        password: 'root',
+        database: 'db_ecommerce',
+        host: '127.0.0.1',
+        dialect: 'postgres',
+      },
+    };
     ```
 
 ### ENVIRONTMENT: 
@@ -64,18 +81,29 @@
       ELEVANIA_API_KEY=xxx sesuaikan saja
       PORT=3000
       SALT=10
+      BASE_URL=http://localhost:3000/api/v1 ## Keperluan Testing
     ```
 
 ### MIGRATION: 
   - Setelah semua config dibuat jalankan migration
   - ```sequelize db:migrate```
+  - atau dengan perintah ```yarn migrate```
 
 ### START SERVER: 
   - Jalankan Perintah Beikut
-  - ```yarn start```
+  - ```yarn dev```    # Development
+  - ```yarn dev```    # Tesing
+  - ```yarn start```  # Production
   - Setelah Itu Pastikan ```Pair Key``` untuk JWT sudah tergenerate
   - ```./config/private.pem```
   - ```./config/public.pub```
+
+### TESTING
+  - Buat Database Baru dengan nama `db_ecommerce_test`
+  - Update Config Database untuk testing
+  - Jalankan server dalam mode test ```yarn test```
+  - Kemudian jalankan test aplikasi dengan perintah ```yarn test_app```
+  - Database testing akan secara otomatis termigrasi
 
 ### REGISTER ADMIN USER
   - Jalankan Request Untuk Register User
