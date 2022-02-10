@@ -34,6 +34,7 @@ function ManageProduct(props) {
     };
 
   const handleBtnAdd = () => {
+    productStore.setMyState('payload', { name: '', sku: '', price: '', description: '' });
     handleShow();
   };
 
