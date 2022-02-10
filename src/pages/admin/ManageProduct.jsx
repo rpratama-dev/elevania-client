@@ -67,6 +67,19 @@ function ManageProduct(props) {
             </div>
           </div>
         )}
+        {products.length < 1 && (
+          <div className="row">
+            <div className="col-md-12">
+              <h4 className="text-center">Kami sedang Menyiapkan Produk</h4>
+            </div>
+            <div className="col-md-12">
+              <img
+                className="my-4"
+                src={`${process.env.PUBLIC_URL}/assets/images/prepare.svg`}
+                alt="images/prepare.jpg"></img>
+            </div>
+          </div>
+        )}
         <div
           className="row infinity_scroll"
           id="data-prd"

@@ -133,7 +133,8 @@ function ModalFormProduct(props) {
   const fields = MyComp.product(payload, errMsg, handleChange);
 
   const handleConfirm = async () => {
-    const newPayload = { ...payload };
+    const { description, name, price, prod_no, sku } = payload;
+    const newPayload = { description, name, price, prod_no, sku };
     if (product && product.prod_no) newPayload.prod_no = product.prod_no;
     productStore.addProduct(!!product, newPayload, (message) => {
       if (message) {

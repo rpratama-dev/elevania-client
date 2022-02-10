@@ -79,6 +79,7 @@ class ProductStore {
       this.setMyState('loading', true);
       const tempUrl = ServerApi.URL_PRODUCT;
       const url = isEdit ? `${tempUrl}/${payload.prod_no}` : tempUrl;
+      delete payload.prod_no;
       const method = isEdit ? 'put' : 'post';
       const { response, message } = await CallServer({ method, url, data: payload });
 
@@ -90,8 +91,10 @@ class ProductStore {
           .indexOf(String(response.prod_no));
         if (index > -1) {
           const newProduccts = JSON.parse(JSON.stringify(this.myState.products));
+          const { image_url } = newProduccts[index];
           const temps = newProduccts[index].images;
-          newProduccts.splice(index, 1, { ...response, images: temps });
+          newProduccts.splice(index, 1, { ...response, image_url, images: temps });
+          console.log('newProduccts', newProduccts);
           this.setMyState('products', newProduccts);
         }
       } else {
@@ -122,8 +125,10 @@ class ProductStore {
         }),
       );
       const temps = [...this.myState.products, ...newResponse.slice(0)];
-      if (temps.length >= 1) {
-        this.setMyState('products', temps);
+      const key = 'id';
+      const uniques = [...new Map(temps.map((item) => [item[key], item])).values()];
+      if (uniques.length >= 1) {
+        this.setMyState('products', uniques);
       }
       if (response.length < 1) this.setMyState('finished', true);
     } catch (error) {
